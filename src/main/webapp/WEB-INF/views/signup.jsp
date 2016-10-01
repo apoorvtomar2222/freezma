@@ -76,7 +76,7 @@ body {
 
 				<tr>
 					<td>Confirm Password:</td>
-					<td><form:input type="password" path="cPassword" /></td>
+					<td><form:input type="password" path="CPassword" /><label class="text text-danger"> </label><form:errors path="CPassword" /></td>
 				</tr>
 
 				<tr>

@@ -118,8 +118,10 @@ public class Profile implements Serializable
 		Password = password;
 	}
 
-
-	public String getCPassword() {
+	@NotEmpty(message="Password field is mandatory.")
+	@Size(min = 6, max = 15, message = "Your password must between 6 and 15 characters")
+	public String getCPassword() 
+	{
 		return CPassword;
 	}
 

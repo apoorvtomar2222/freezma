@@ -19,31 +19,7 @@ body {
 </style>
 </head>
 <body>
-<navbar class="navbar navbar-blurred navbar-fixed-top">
-  <div class="container-fluid">
-    <div class="navbar-header">
-    
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#">Freezma</a>
-      
-      
-    </div>
-    
-    <div class="collapse navbar-collapse" id="myNavbar">
-       <ul class="nav navbar-nav navbar-right">
-       <li class="dropdown">
-      
-        <li><a href="${pageContext.request.contextPath}/signup" class="btn ">Signup</a></li>
-        <li><a href="${pageContext.request.contextPath}/loginpage" class="btn" >LogIn</a></li>
-      
-      </ul>
-      </div>
-  </div>
-  
+<c:import url="head.jsp"></c:import>
   <img id="logo" src="${pageContext.request.contextPath}/resources/images/log.jpg" width="auto;" height="auto;"  style="margin:50px 300px"/>
 </navbar>
 

@@ -64,6 +64,21 @@
 		$scope.userdatatemp;
 		
 		$scope.edit = false;
+		
+		$scope.CheckForGender = function()
+		{
+			if( $scope.userdatatemp.ProfileGender != 'M' && $scope.userdatatemp.ProfileGender != 'F' )
+				$scope.genderCheck = true;
+			else
+				$scope.genderCheck = false;
+		
+			$scope.updateOverall();
+		}
+		
+		$scope.updateOverall = function()
+		{
+			$scope.overallValidationCheck = $scope.genderCheck;
+		}
 			
 		$UserService.getUserDetails().then(
 				
@@ -80,7 +95,6 @@
 					console.log('Error in getting User Data');
 				}
 		);
-
 		$scope.toggleChangeUpdate = function(response)
 		{  
 			console.log( JSON.stringify($scope.userdatatemp) );
@@ -124,6 +138,7 @@
 
 			console.log($scope.myerror);
 		}
+			
 
 		$("#ffub").click(function() {
 			$("#ffu").trigger('click');
@@ -141,25 +156,18 @@
 
 
 <body ng-app="myApp" ng-controller="abc">
-	<c:choose>
-		<c:when test="${not empty pageContext.request.userPrincipal}">
-			<li><a href="${pageContext.request.contextPath}/index">${pageContext.request.userPrincipal.name}</a></li>
-			<li><a href="${pageContext.request.contextPath}/logout">Log
-					Out</a></li>
+<c:import url="head.jsp"></c:import>
 
-		</c:when>
+<br>
 
-		<c:otherwise>
-			<li><a href="${pageContext.request.contextPath}/signup"><span
-					class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-			<li><a href="${pageContext.request.contextPath}/loginpage"><span
-					class="glyphicon glyphicon-log-in"></span> Login</a></li>
-		</c:otherwise>
-	</c:choose>
-
-
-
+<br>
+<br>
+<br>
+<br>
+<br>
 <div class="container">
+
+
 <table class="table ">
 
 	
@@ -167,14 +175,23 @@
 
 			<tr>
 				<td> <br>
-					 <img id="profileImage" ng-src="{{data.ProfileImage}}"height=" 150px" width="200px">	
+					 <img id="profileImage" ng-src="{{data.ProfileImage}}"height=" 150px" width="200px" align="center">	
 					 <button id="ffub" class="btm btn-link">Choose Image</button>
 					 <input type="file" id="ffu" style="opacity: 0;" />
 					 <div class="text text-danger" ng-if=" myerror =='error' ">Invalid Image Type</div>
 				</td>
 			</tr>
 
-			<tr>
+
+					<button class="btn btn-danger pull-right" ng-click="letitbe(); edit = !edit;">
+							<span ng-if="!edit">Change Password</span>
+							<span ng-if="edit">Let It Be</span>
+					</button>
+							<button class="btn btn-success" ng-if="edit" ng-disabled="overallValidationCheck" >
+								<span ng-click="toggleChangeUpdate();">Save</span>
+							</button>
+	
+					<tr>
 						<td>User Name:</td>
 						<td>
 							<label ng-if="!edit">{{userdata.ProfileName}}</label>
@@ -182,14 +199,41 @@
 						</td>
 					</tr>
 				
+				
+				
+				
 				<tr>
 					<td>Gender:</td>
 					<td><label ng-if="!edit">{{userdata.ProfileGender}}</label>
-					<input type="text" class="form-control" value="{{userdatatemp.ProfileGender}}" ng-model="userdatatemp.ProfileGender" ng-if="edit"/>							
-							
-					</td>
-				</tr>
+					<input type="text" class="form-control" value="{{userdatatemp.ProfileGender}}" ng-model="userdatatemp.ProfileGender" ng-if="edit" ng-change="CheckForGender();"/>							
+					<label ng-if="genderCheck" class="text text-danger">Invalid Gender. Only 'M' or 'F' allowed.</label>		
+				</td>
 				
+				</tr>
+<tr>
+					<td>Gender:</td>
+					<td>
+					<label ng-if="!edit">{{userdata.ProfileGender}}</label>
+				<select ng-if="edit" value="{{userdatatemp.ProfileGender}}" ng-model="userdatatemp.ProfileGender">
+  						<option value="M">Male</option>
+  						<option value="F">Female</option>
+  				</select>
+  
+					
+					</td>
+				
+				</tr>
+			
+			
+				
+					<tr>
+						<td>Email:</td>
+						<td>
+							<label ng-if="!edit">{{userdata.ProfileEmail}}</label>
+							<input type="text" class="form-control" value="{{userdatatemp.ProfileEmail}}" ng-model="userdatatemp.ProfileEmail" ng-if="edit"/>
+						</td>
+					</tr>
+					
 				<tr>
 					<td>Address:</td>
 					<td><label ng-if="!edit">{{userdata.ProfileAddress}}</label>
@@ -212,15 +256,59 @@
 							<span ng-if="edit">Let It Be</span>
 					</button>
 				</td>
+			
 				<td>
-							<button class="btn btn-success" ng-if="edit" >
+							<button class="btn btn-success" ng-if="edit" ng-disabled="overallValidationCheck" >
 								<span ng-click="toggleChangeUpdate();">Update</span>
 							</button>
 				</td>
 			</tr>
 		</tbody>
 	 </table>
-	</div>
+
+<table class=table>
+
+<tbody ng-if="edit">
+
+					<tr>
+					<td>Old Password</td>
+					<td><label ng-if="!edit">{{userdata.ProfileAddress}}</label>
+					<input type="text" class="form-control" value="{{userdatatemp.ProfileAddress}}" ng-model="userdatatemp.ProfileAddress" ng-if="edit"/>							
+					</td>
+					</tr>
+					
+					<tr>
+					<td>New Password</td>
+					<td><label ng-if="!edit">{{userdata.ProfileAddress}}</label>
+					<input type="text" class="form-control" value="{{userdatatemp.ProfileAddress}}" ng-model="userdatatemp.ProfileAddress" ng-if="edit"/>
+					</td>
+					</tr>
+					
+					<tr>
+					<td>Confirm New Password</td>
+					<td><label ng-if="!edit">{{userdata.ProfileAddress}}</label>
+					<input type="text" class="form-control" value="{{userdatatemp.ProfileAddress}}" ng-model="userdatatemp.ProfileAddress" ng-if="edit"/>							
+					</td>
+					</tr>
+					
+					
+
+
+<tr>
+						
+</tbody>
+</table>
 </body>
+
+	
+					<button class="btn btn-danger pull-right" ng-click="letitbe(); edit = !edit;">
+							<span ng-if="!edit">Change Password</span>
+							<span ng-if="edit">Let It Be</span>
+					</button>
+							<button class="btn btn-success" ng-if="edit" ng-disabled="overallValidationCheck" >
+								<span ng-click="toggleChangeUpdate();">Save</span>
+							</button>
+				
+</div>
 
 </html>

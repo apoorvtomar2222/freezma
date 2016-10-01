@@ -65,6 +65,7 @@ public class RESTFreezmaController
 			json.put("ProfileGender", p.getGender());
 			json.put("ProfileAddress", p.getAddress());
 			json.put("ProfilePhone", p.getPhone());
+			json.put("ProfileEmail", p.getEmail());
 	    	
 	    }
 		
@@ -110,6 +111,10 @@ public class RESTFreezmaController
 	    	Profile p = ps.get(user);
 	    	
 	    	p.setUsername( jobjin.get("ProfileName").toString() );
+	    	p.setGender( jobjin.get("ProfileGender").toString() );
+	    	p.setPhone( jobjin.get("ProfilePhone").toString() );
+	    	p.setAddress( jobjin.get("ProfileAddress").toString() );
+	    	p.setCPassword(p.getPassword());
 	    	
 	    	ps.update(p);
 	    	
