@@ -129,7 +129,19 @@ public class RESTFreezmaController
         return new ResponseEntity<String>(json.toString(), HttpStatus.CREATED);
     }
 	
+	/*
+
+	@CrossOrigin
+    @RequestMapping(value = "/updatePassword/", method = RequestMethod.POST)
+	public ResponseEntity<String> updateUserPassword(HttpServletResponse response,@RequestBody JSONObject data, UriComponentsBuilder ucBuilder) {
+	    
+		{
+			System.out.println(data);
+			JSONObject json = new JSONObject();
+		
+		return new ResponseEntity<String>(json.toString(), HttpStatus.CREATED);
 	
-	
+		}
+		}*/
 
 }

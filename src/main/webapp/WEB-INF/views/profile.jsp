@@ -4,7 +4,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+ <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
 <c:import url="head-meta.jsp"></c:import>
+
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Profile</title>
 </head>
@@ -51,9 +53,26 @@
                     );
 		
 	    }
-	    };
-	 
-	}]);
+	    ,
+/* 	    updatePassword: function(item)
+	    {
+            return $http.post('http://localhost:9000/freezma/updatePassword/', item)
+                    .then
+                    (
+                            function(response)
+                            {
+                                return response.data;
+                            }, 
+                            function(errResponse)
+                            {
+                                console.error('Error while updating User');
+                                return $q.reject(errResponse);
+                            }
+                    );
+		
+	    }
+ */	    
+	    };}]);
 	
 	
 	myApp.controller("abc",['$scope', 'UserService',function($scope , $UserService ) {
@@ -64,6 +83,14 @@
 		$scope.userdatatemp;
 		
 		$scope.edit = false;
+		$scope.password=false;
+		
+		$scope.UserPasswordDetails = 	
+		{ 
+				OldPassword: "",
+				NewPassword: "",
+				ConfirmNewPassword: ""
+		};
 		
 		$scope.CheckForGender = function()
 		{
@@ -75,10 +102,93 @@
 			$scope.updateOverall();
 		}
 		
+		
+ 		$scope.CheckForEmail = function()
+		{
+			var reg = /\S+@\S+\.\S+/;
+			
+			if ($scope.emailCheck=!reg.test( $scope.userdatatemp.ProfileEmail ))
+			$scope.emailCheck = true;
+			else
+			$scope.emailCheck = false;
+			$scope.updateOverall();
+		}
+ 		
+		$scope.CheckForPhone = function()
+		{
+			var reg = /^[7-9][0-9]{9}$/;
+		
+			if ($scope.phoneCheck = !reg.test( $scope.userdatatemp.ProfilePhone ))
+				$scope.phoneCheck=true;
+			else
+				$scope.phoneCheck=false;
+				$scope.updateOverall();
+		}
+		
+		$scope.CheckForUsername = function()
+		{
+			var reg = /[a-zA-Z_][0-9a-zA-Z_]*/;
+		
+			if ($scope.nameCheck = !reg.test( $scope.userdatatemp.ProfileName ))
+				$scope.nameCheck=true;
+			else
+				$scope.nameCheck=false;
+				$scope.updateOverall();
+		}
+ 
+		 
+		 $scope.CheckForUsername = function()
+		{
+			var reg = /[a-zA-Z_][0-9a-zA-Z_]*/;
+		
+			if ($scope.nameCheck = !reg.test( $scope.userdatatemp.ProfileName ))
+				$scope.nameCheck=true;
+			else
+				$scope.nameCheck=false;
+				$scope.updateOverall();
+		}
+		
+	
 		$scope.updateOverall = function()
 		{
 			$scope.overallValidationCheck = $scope.genderCheck;
+			$scope.overallValidationCheck = $scope.emailCheck;
+			$scope.overallValidationCheck = $scope.phoneCheck;
+			$scope.overallValidationCheck = $scope.nameCheck;
+			$scope.overallValidationCheck = $scope.oldpasswordCheck;
+				
 		}
+		
+	 
+		 $scope.CheckForOldPassword = function()
+			{
+				var reg = /^.{6,15}$/;
+			
+				if ($scope.oldpasswordCheck = !reg.test( $scope.UserPasswordDetails.OldPassword))
+					
+					$scope.oldpasswordCheck=true;
+				else
+					$scope.oldpasswordCheck=false;
+				
+					$scope.updateOverallPassword();
+			}
+		 
+		 $scope.CheckPassword = function()
+		 {
+			if ($scope.UserPasswordDetails.NewPassword != $scope.UserPasswordDetails.ConfirmNewPassword) 
+		 	
+				$scope.matchpasswordCheck=true;
+			else
+				$scope.matchpasswordCheck=false;
+		 }
+		 
+		 $scope.updateOverallPassword = function()
+		 {
+			 $scope.overallValidationPasswordCheck = $scope.oldpasswordCheck;
+			 $scope.overallValidationPasswordCheck = $scope.matchpasswordCheck;
+		 }
+ 	
+		
 			
 		$UserService.getUserDetails().then(
 				
@@ -190,61 +300,51 @@
 							<button class="btn btn-success" ng-if="edit" ng-disabled="overallValidationCheck" >
 								<span ng-click="toggleChangeUpdate();">Save</span>
 							</button>
-	
+ 
 					<tr>
 						<td>User Name:</td>
 						<td>
 							<label ng-if="!edit">{{userdata.ProfileName}}</label>
-							<input type="text" class="form-control" value="{{userdatatemp.ProfileName}}" ng-model="userdatatemp.ProfileName" ng-if="edit"/>
+							<input type="text" class="form-control" value="{{userdatatemp.ProfileName}}" ng-model="userdatatemp.ProfileName" ng-if="edit" ng-change="CheckForUsername();"/>
+							<label ng-if="nameCheck" class="text text-danger"> UserName not Correct</label>
 						</td>
 					</tr>
-				
-				
-				
-				
-				<tr>
-					<td>Gender:</td>
-					<td><label ng-if="!edit">{{userdata.ProfileGender}}</label>
-					<input type="text" class="form-control" value="{{userdatatemp.ProfileGender}}" ng-model="userdatatemp.ProfileGender" ng-if="edit" ng-change="CheckForGender();"/>							
-					<label ng-if="genderCheck" class="text text-danger">Invalid Gender. Only 'M' or 'F' allowed.</label>		
-				</td>
-				
+			
 				</tr>
-<tr>
+			<tr>
 					<td>Gender:</td>
 					<td>
 					<label ng-if="!edit">{{userdata.ProfileGender}}</label>
-				<select ng-if="edit" value="{{userdatatemp.ProfileGender}}" ng-model="userdatatemp.ProfileGender">
+					<select ng-if="edit" value="{{userdatatemp.ProfileGender}}" ng-model="userdatatemp.ProfileGender">
   						<option value="M">Male</option>
   						<option value="F">Female</option>
-  				</select>
-  
-					
-					</td>
-				
-				</tr>
+  					</select>
+  					</td>
+					</tr>
 			
 			
 				
-					<tr>
+ 					<tr>
 						<td>Email:</td>
 						<td>
 							<label ng-if="!edit">{{userdata.ProfileEmail}}</label>
-							<input type="text" class="form-control" value="{{userdatatemp.ProfileEmail}}" ng-model="userdatatemp.ProfileEmail" ng-if="edit"/>
+							<input type="text" class="form-control" value="{{userdatatemp.ProfileEmail}}" ng-model="userdatatemp.ProfileEmail" ng-if="edit" ng-change="CheckForEmail();"/>
+							<label ng-if="emailCheck" class="text text-danger">Email Id not correct</label>
 						</td>
 					</tr>
-					
+ 					
 				<tr>
 					<td>Address:</td>
 					<td><label ng-if="!edit">{{userdata.ProfileAddress}}</label>
-					<input type="text" class="form-control" value="{{userdatatemp.ProfileAddress}}" ng-model="userdatatemp.ProfileAddress" ng-if="edit"/>							
+					<input type="text" class="form-control" value="{{userdatatemp.ProfileAddress}}" ng-model="userdatatemp.ProfileAddress" ng-if="edit" />							
 					</td>
 				</tr>
 				<tr>
 				
 					<td>Contact No:</td>
 					<td><label ng-if="!edit">{{userdata.ProfilePhone}}</label>
-					<input type="text" class="form-control" value="{{userdatatemp.ProfilePhone}}" ng-model="userdatatemp.ProfilePhone" ng-if="edit"/>
+					<input type="text" class="form-control" value="{{userdatatemp.ProfilePhone}}" ng-model="userdatatemp.ProfilePhone" ng-if="edit" ng-change="CheckForPhone();"/>
+					<label ng-if="phoneCheck">Incorrect Phone Number</label>
 					</td>							
 				</tr>
 				
@@ -267,27 +367,28 @@
 	 </table>
 
 <table class=table>
-
-<tbody ng-if="edit">
+<tbody ng-if="password">
 
 					<tr>
 					<td>Old Password</td>
-					<td><label ng-if="!edit">{{userdata.ProfileAddress}}</label>
-					<input type="text" class="form-control" value="{{userdatatemp.ProfileAddress}}" ng-model="userdatatemp.ProfileAddress" ng-if="edit"/>							
+					<td>
+					<input type="text" class="form-control"  ng-if="password" value="{{UserPasswordDetails.OldPassword}}" ng-model="UserPasswordDetails.OldPassword" ng-change="CheckForOldPassword();"/>
+					<label ng-if="oldpasswordCheck">Password Should be betweeen 6 to 15 Character</label>							
 					</td>
 					</tr>
 					
 					<tr>
 					<td>New Password</td>
-					<td><label ng-if="!edit">{{userdata.ProfileAddress}}</label>
-					<input type="text" class="form-control" value="{{userdatatemp.ProfileAddress}}" ng-model="userdatatemp.ProfileAddress" ng-if="edit"/>
+					<td><input type="text" class="form-control"  ng-if="password" value="{{UserPasswordDetails.NewPassword}}" ng-model="UserPasswordDetails.NewPassword"/>
 					</td>
 					</tr>
 					
 					<tr>
 					<td>Confirm New Password</td>
-					<td><label ng-if="!edit">{{userdata.ProfileAddress}}</label>
-					<input type="text" class="form-control" value="{{userdatatemp.ProfileAddress}}" ng-model="userdatatemp.ProfileAddress" ng-if="edit"/>							
+					<td><input type="text" class="form-control" ng-if="password" value="{{UserPasswordDetails.ConfirmNewPassword}}" ng-model="UserPasswordDetails.ConfirmNewPassword" ng-change="CheckPassword();"/>							
+					<td>{{UserPasswordDetails.ConfirmNewPassword}}</td>
+					<label ng-if="matchpasswordCheck">New Password and Confirm Password Mismatch</label>
+					
 					</td>
 					</tr>
 					
@@ -299,16 +400,13 @@
 </tbody>
 </table>
 </body>
-
-	
-					<button class="btn btn-danger pull-right" ng-click="letitbe(); edit = !edit;">
-							<span ng-if="!edit">Change Password</span>
-							<span ng-if="edit">Let It Be</span>
+					<button class="btn btn-danger pull-right" ng-click="password=!password;">
+							<span ng-if="!password">Change Password</span>
+							<span ng-if="password">Let It Be</span>
 					</button>
-							<button class="btn btn-success" ng-if="edit" ng-disabled="overallValidationCheck" >
-								<span ng-click="toggleChangeUpdate();">Save</span>
+							<button class="btn btn-success" ng-if="password" ng-disabled="overallValidationPasswordCheck">
+								<span">Save</span>
 							</button>
-				
-</div>
-
-</html>
+		 </div>
+ 
+ </html>
