@@ -27,6 +27,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.freezma.ProfileModel.Profile;
 import com.freezma.ProfileModel.ProfileService;
 
+import javassist.compiler.ast.Variable;
+
 
 @CrossOrigin(origins = "http://localhost:9001", maxAge = 3600)
 @RestController
@@ -129,19 +131,67 @@ public class RESTFreezmaController
         return new ResponseEntity<String>(json.toString(), HttpStatus.CREATED);
     }
 	
-	/*
-
 	@CrossOrigin
     @RequestMapping(value = "/updatePassword/", method = RequestMethod.POST)
-	public ResponseEntity<String> updateUserPassword(HttpServletResponse response,@RequestBody JSONObject data, UriComponentsBuilder ucBuilder) {
-	    
-		{
-			System.out.println(data);
-			JSONObject json = new JSONObject();
-		
-		return new ResponseEntity<String>(json.toString(), HttpStatus.CREATED);
 	
+    public ResponseEntity<String> updatePassword(HttpServletResponse response,@RequestBody String data, UriComponentsBuilder ucBuilder) {
+        
+		System.out.println(data);
+		
+		
+		JSONObject json = new JSONObject();
+        
+		JSONParser jpar = new JSONParser();
+		
+		try
+		{
+			json = (JSONObject)jpar.parse(data);
 		}
-		}*/
-
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		String user = null;
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    if (auth != null && !auth.getName().equals("anonymousUser"))
+	    {   
+	    	System.out.println(auth.getName());
+	    	user = auth.getName();
+	    }
+	    
+	    if( user != null )
+	    	
+	   {
+	    	Profile p = ps.get(user);
+	    	
+	    	String pass = json.get("OldPassword").toString();
+	    	
+	    	if(p.getPassword().equals(pass) )
+	    	{
+	    		String npass =  json.get("NewPassword").toString(); 
+	    		p.setPassword(npass);
+	    		p.setUsername(p.getUsername());
+		    	p.setGender( p.getGender());
+		    	p.setPhone( p.getPhone() );
+		    	p.setAddress( p.getAddress());
+		    	p.setCPassword(p.getPassword());
+		    	
+	    		ps.update(p);
+	    		
+	    		json.put("status", "Updated");
+	    	}
+	   
+	     
+	   }
+	    else
+	    {
+	    	json.put("status", "Password Incorrect");
+	    }
+	    
+        System.out.println(json.toString());
+        
+        return new ResponseEntity<String>(json.toString(), HttpStatus.CREATED);
+    }
 }

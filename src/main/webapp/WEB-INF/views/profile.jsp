@@ -54,7 +54,7 @@
 		
 	    }
 	    ,
-/* 	    updatePassword: function(item)
+ 	    updatePassword: function(item)
 	    {
             return $http.post('http://localhost:9000/freezma/updatePassword/', item)
                     .then
@@ -71,7 +71,6 @@
                     );
 		
 	    }
- */	    
 	    };}]);
 	
 	
@@ -87,6 +86,7 @@
 		
 		$scope.UserPasswordDetails = 	
 		{ 
+				
 				OldPassword: "",
 				NewPassword: "",
 				ConfirmNewPassword: ""
@@ -205,6 +205,30 @@
 					console.log('Error in getting User Data');
 				}
 		);
+		
+		 $scope.toggleUpdatePassword = function(response)
+		{
+			console.log(JSON.stringify($scope.UserPasswordDetails));
+			
+			$UserService.updatePassword(JSON.stringify($scope.UserPasswordDetails)).then
+			(
+			function(response)
+			{
+				if(response.status =="Updated")
+					{
+					System.out.println("Success");
+					}
+					
+			  }
+		 ,
+		 function(errResponse)
+		 {
+				console.log('Error in updating User Data');
+			}
+
+			
+			)}
+,		
 		$scope.toggleChangeUpdate = function(response)
 		{  
 			console.log( JSON.stringify($scope.userdatatemp) );
@@ -236,7 +260,7 @@
 			console.log( $scope.userdatatemp );
 		}
 		
-		
+		 
 			$scope.CheckValidFileType = function(inp) 
 		{
 			console.log(inp);
@@ -404,8 +428,9 @@
 							<span ng-if="!password">Change Password</span>
 							<span ng-if="password">Let It Be</span>
 					</button>
-							<button class="btn btn-success" ng-if="password" ng-disabled="overallValidationPasswordCheck">
-								<span">Save</span>
+							<button class="btn btn-success" ng-if="password" ng-disabled="overallValidationPasswordCheck" >
+							
+								<span ng-click="toggleUpdatePassword();">Save</span>
 							</button>
 		 </div>
  
