@@ -26,7 +26,7 @@
 			username-parameter="Username" password-parameter="Password"
 			default-target-url="/profile" authentication-failure-url="/loginpage?error=1" />
 		<security:logout logout-url="/logout"
-			logout-success-url="/profile" />
+			logout-success-url="/index" />
 
 		<security:csrf disabled="true" />
 	</security:http>

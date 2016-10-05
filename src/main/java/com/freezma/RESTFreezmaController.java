@@ -182,7 +182,10 @@ public class RESTFreezmaController
 	    		
 	    		json.put("status", "Updated");
 	    	}
-	   
+	    	else
+	    	{
+	    		json.put("status", "Password Incorrect");
+	    	}
 	     
 	   }
 	    else
@@ -191,6 +194,80 @@ public class RESTFreezmaController
 	    }
 	    
         System.out.println(json.toString());
+        
+        return new ResponseEntity<String>(json.toString(), HttpStatus.CREATED);
+    }
+	
+	@CrossOrigin
+    @RequestMapping(value = "/updateProfilePicture/", method = RequestMethod.POST )
+    public ResponseEntity<String> updateProfilePicture(MultipartHttpServletRequest request , HttpServletResponse response , UriComponentsBuilder ucBuilder) 
+	{
+    	System.out.println( request.getFile("file").getName() );
+		System.out.println( request.getFile("file").getSize() );
+		System.out.println( request.getFile("file").getContentType() );
+		System.out.println( request.getFile("file").getOriginalFilename() );
+		
+		JSONObject json = new JSONObject();
+		
+		json.put("status", "Failed");
+		
+		BufferedOutputStream stream = null;
+		
+		/*try
+	    {
+			String path = context.getRealPath("/");
+	        
+	        System.out.println(path);
+	        
+	        File directory = null;
+	        
+	        System.out.println( request.getFile("file") );
+	       
+	        if (request.getFile("file").getContentType().contains("image"))
+	        {
+	            directory = new File(path + "\\resources\\images");
+	            
+	            System.out.println(directory);
+	            
+	            byte[] bytes = null;
+	            File file = null;
+	            bytes = request.getFile("file").getBytes();
+	            
+	            if (!directory.exists()) directory.mkdirs();
+	           
+	            if( hashname.length > 0 )
+	            {
+	            	file = new File(directory.getAbsolutePath() + System.getProperty("file.separator") + ".jpg");
+		            
+		            System.out.println(file.getAbsolutePath());
+		            
+		            stream = new BufferedOutputStream(new FileOutputStream(file));
+		            stream.write(bytes);
+		            stream.close();
+		            
+		            Profile p = ps.get(request.getHeader("user"));
+		            
+		            if( p != null )
+		            {
+		            	p.setImage("resources/images/" + ".jpg" );
+		            	
+		            	ps.update(p);
+		            	
+		            	json.put("status", "Uploaded");
+		            	
+		            	json.put("imagesrc", "resources/images/" + ".jpg" );
+		            	
+		            }
+	            }
+
+	        }
+	    }
+	    catch (Exception e)
+	    {
+	    	e.printStackTrace();
+	    }
+		
+*/		System.out.println(json.toString());
         
         return new ResponseEntity<String>(json.toString(), HttpStatus.CREATED);
     }

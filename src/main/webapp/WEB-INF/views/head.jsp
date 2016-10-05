@@ -14,6 +14,8 @@
 <navbar class="navbar navbar-blurred navbar-fixed-top">
   <div class="container-fluid">
     <div class="navbar-header">
+      
+    
     
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
         <span class="icon-bar"></span>
@@ -22,21 +24,21 @@
       </button>
       <a class="navbar-brand" href="#">Freezma</a>
       
+      <input type="text" name="search" placeholder="Search Freezma" maxlength="15" size="70" style="padding:10px">
       
     </div>
     
     <div class="collapse navbar-collapse" id="myNavbar">
        <ul class="nav navbar-nav navbar-right">
        <li class="dropdown">
-      
+      <li><a href="${pageContext.request.contextPath}/profile" class="btn ">Home</a></li>
   <%--       <li><a href="${pageContext.request.contextPath}/signup" class="btn ">Signup</a></li>
         <li><a href="${pageContext.request.contextPath}/loginpage" class="btn" >LogIn</a></li>
    --%>
   	<c:choose>
 		<c:when test="${not empty pageContext.request.userPrincipal}">
-			<li><a href="${pageContext.request.contextPath}/index">${pageContext.request.userPrincipal.name}</a></li>
-			<li><a href="${pageContext.request.contextPath}/logout">Log
-					Out</a></li>
+			<li><a href="${pageContext.request.contextPath}/profile">${pageContext.request.userPrincipal.name}</a></li>
+			<li><a href="${pageContext.request.contextPath}/logout">Log Out</a></li>
 
 		</c:when>
 
