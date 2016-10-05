@@ -20,7 +20,7 @@
 	
 	myApp.service('fileUpload', ['$http', function ($http) 
 	      {
-	    		this.uploadFileToUrl = function(file , uploadUrl)
+	    		this.uploadFileToUrl = function(file ,paramuser, uploadUrl)
 	    		{
 	        	var fd = new FormData();
 	        	fd.append('file', file);
@@ -28,7 +28,7 @@
 	   	     	return $http.post(uploadUrl, fd, 
 	   	     {
 	            		transformRequest: angular.identity,
-	            headers: {'Content-Type': undefined}
+	            headers: {'Content-Type': undefined , user: paramuser}
 	        }).then(
                     function(response){
                         return response.data;
@@ -386,14 +386,16 @@
 		$("#ffu").on('change',function(e) 
 		{
 					var filename = e.target.files[0].name;
+					
 					$scope.fileforupload = e.target.files[0];
+					
 					var file = $scope.fileforupload;
 					
 					console.log($scope.fileforupload);
 					
 						var uploadUrl = "http://localhost:9000/freezma/updateProfilePicture/";
 				  	        
-			   		    var res = $fileUpload.uploadFileToUrl(file ,uploadUrl).then
+			   		    var res = $fileUpload.uploadFileToUrl(file ,$scope.userdata.ProfileName , uploadUrl).then
 				  	        
 			   		    (
 				            		function(response)
@@ -401,8 +403,10 @@
 				            			$scope.response = response.status;
 				            			$scope.imagesrc = response.imagesrc;
 				            			
-				            			//console.log( $scope.response );
-				            			//console.log( $scope.imagesrc );
+				            			
+				            			$scope.userdata.ProfileImage = angular.copy(response.imagesrc);
+				            			console.log( $scope.response );
+				            			console.log( $scope.imagesrc );
 				            			
 				            			if( $scope.response == "Uploaded" )
 				            			{
@@ -410,7 +414,7 @@
 
 				            				$scope.currentImage = '${pageContext.request.contextPath}/' + $scope.imagesrc;
 				            				
-				            				$scope.defaultPic = ( $scope.currentImage == '/monkeybusiness/resources/images/profilepic_male.jpg' || $scope.currentImage == '/monkeybusiness/resources/images/profilepic_female.jpg' );
+				            				
 				            			}
 				            			else
 				            			{
@@ -427,7 +431,7 @@
 					                } 
 				        	);
 				  			
-					$scope.CheckValidFileType(filename.substring(filename.indexOf('.'), filename.length));
+			$scope.CheckValidFileType(filename.substring(filename.indexOf('.'), filename.length));
 					
 		});
 }]);
@@ -457,7 +461,7 @@
 			<tr>
 				<td></td>
 				<td> <br>
-					 <img id="profileImage" ng-src="{{data.ProfileImage}}"height=" 150px" width="200px" align="center">	
+					 <img id="profileImage" ng-src="{{userdata.ProfileImage}}"height=" 150px" width="200px" align="center">	
 					 <button id="ffub" class="btn btn-link">Choose Image</button>
 					 
 					 <input type="file" id="ffu" style="opacity:0"  />

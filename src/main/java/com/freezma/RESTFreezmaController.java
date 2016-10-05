@@ -202,18 +202,19 @@ public class RESTFreezmaController
     @RequestMapping(value = "/updateProfilePicture/", method = RequestMethod.POST )
     public ResponseEntity<String> updateProfilePicture(MultipartHttpServletRequest request , HttpServletResponse response , UriComponentsBuilder ucBuilder) 
 	{
-    	System.out.println( request.getFile("file").getName() );
+		System.out.println( request.getHeader("user") );
+		
+		System.out.println( request.getFile("file").getName() );
 		System.out.println( request.getFile("file").getSize() );
 		System.out.println( request.getFile("file").getContentType() );
 		System.out.println( request.getFile("file").getOriginalFilename() );
 		
+		String hashname[] = request.getFile("file").getOriginalFilename().split(",");
+		
 		JSONObject json = new JSONObject();
-		
-		json.put("status", "Failed");
-		
 		BufferedOutputStream stream = null;
 		
-		/*try
+		try
 	    {
 			String path = context.getRealPath("/");
 	        
@@ -234,10 +235,8 @@ public class RESTFreezmaController
 	            bytes = request.getFile("file").getBytes();
 	            
 	            if (!directory.exists()) directory.mkdirs();
-	           
-	            if( hashname.length > 0 )
 	            {
-	            	file = new File(directory.getAbsolutePath() + System.getProperty("file.separator") + ".jpg");
+	            	file = new File(directory.getAbsolutePath() + System.getProperty("file.separator") +hashname[0] );
 		            
 		            System.out.println(file.getAbsolutePath());
 		            
@@ -249,13 +248,17 @@ public class RESTFreezmaController
 		            
 		            if( p != null )
 		            {
-		            	p.setImage("resources/images/" + ".jpg" );
+		            	p.setImage("resources/images/" +hashname[0]);
+		            	System.out.println(p.getPassword());
+		            	p.setPassword(p.getPassword());
 		            	
+		            	p.setCPassword(p.getPassword());
 		            	ps.update(p);
 		            	
 		            	json.put("status", "Uploaded");
 		            	
-		            	json.put("imagesrc", "resources/images/" + ".jpg" );
+		            	json.put("imagesrc", "resources/images/" +hashname[0]);
+		            	
 		            	
 		            }
 	            }
@@ -267,7 +270,7 @@ public class RESTFreezmaController
 	    	e.printStackTrace();
 	    }
 		
-*/		System.out.println(json.toString());
+		System.out.println(json.toString());
         
         return new ResponseEntity<String>(json.toString(), HttpStatus.CREATED);
     }
