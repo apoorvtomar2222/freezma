@@ -429,74 +429,64 @@
 <a href= "${ pageContext.request.contextPath}/searchnewfreind" type="button" class="btn btn-success pull-right">All Profile</a>
 </div><br><br><br>
 
- <div class="col-md-3">
-  
-
-<div class="well">
-<table class="table ">
-	
+<div class="col-md-3">
+	<div class="well">
+		<table class="table ">
 			<tbody>
 
 			<tr>
-				<td></td>
 				<td> <br>
 					 <img id="profileImage" ng-src="{{userdata.ProfileImage}}"height=" 150px" width="200px" align="center">	
 					 <button id="ffub" class="btn btn-link">Choose Image</button>
-					 
 					 <input type="file" id="ffu" style="opacity:0"  />
-					 
 					 <div class="text text-danger" ng-if=" myerror =='error' " >Invalid Image Type</div>
 				</td>
 			</tr>
-
-
-			
-					<tr>
-						<td>User Name:</td>
-						<td>
+			<tr>
+				<td>User Name:</td>
+				<td>
 							<label ng-if="!edit">{{userdata.ProfileName}}</label>
 							<input type="text" class="form-control" value="{{userdatatemp.ProfileName}}" ng-model="userdatatemp.ProfileName" ng-if="edit" ng-change="CheckForUsername();"/>
 							<label ng-if="nameCheck" class="text text-danger"> UserName not Correct</label>
-						</td>
-					</tr>
+				</td>
+			</tr>
 			
-				</tr>
+		
 			<tr>
-					<td>Gender:</td>
-					<td>
+				<td>Gender:</td>
+				<td>
 					<label ng-if="!edit">{{userdata.ProfileGender}}</label>
 					<select ng-if="edit" value="{{userdatatemp.ProfileGender}}" ng-model="userdatatemp.ProfileGender">
   						<option value="M">Male</option>
   						<option value="F">Female</option>
   					</select>
-  					</td>
-					</tr>
+  				</td>
+			</tr>
 			
 			
 				
- 					<tr>
-						<td>Email:</td>
-						<td>
+ 			<tr>
+				<td>Email:</td>
+				<td>
 							<label ng-if="!edit">{{userdata.ProfileEmail}}</label>
 							<input type="text" class="form-control" value="{{userdatatemp.ProfileEmail}}" ng-model="userdatatemp.ProfileEmail" ng-if="edit" ng-change="CheckForEmail();"/>
 							<label ng-if="emailCheck" class="text text-danger">Email Id not correct</label>
-						</td>
-					</tr>
+				</td>
+			</tr>
  					
-				<tr>
-					<td>Address:</td>
-					<td><label ng-if="!edit">{{userdata.ProfileAddress}}</label>
+			<tr>
+				<td>Address:</td>
+				<td><label ng-if="!edit">{{userdata.ProfileAddress}}</label>
 					<input type="text" class="form-control" value="{{userdatatemp.ProfileAddress}}" ng-model="userdatatemp.ProfileAddress" ng-if="edit" />							
-					</td>
-				</tr>
-				<tr>
-				
-					<td>Contact No:</td>
-					<td><label ng-if="!edit">{{userdata.ProfilePhone}}</label>
+				</td>
+			</tr>
+			<tr>
+				<td>Contact No:</td>
+				<td><label ng-if="!edit">{{userdata.ProfilePhone}}</label>
 					<input type="text" class="form-control" value="{{userdatatemp.ProfilePhone}}" ng-model="userdatatemp.ProfilePhone" ng-if="edit" ng-change="CheckForPhone();"/>
 					<label ng-if="phoneCheck">Incorrect Phone Number</label>
-					</td>							
-				</tr>
+				</td>							
+			</tr>
 				
 				
 			<tr>
@@ -527,21 +517,20 @@
           <span class="label label-warning">Gaming</span>
           <span class="label label-danger">Friends</span>
         </p>
-      </div>
+</div>
       
-      <div class="alert alert-success fade in">
+ <div class="alert alert-success fade in">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
         <p><strong>Ey!</strong></p>
         People are looking at your profile. Find out who.
-      </div>
+ </div>
       <p><a href="#">Link</a></p>
       <p><a href="#">Link</a></p>
       <p><a href="#">Link</a></p>
 
-    </div>
-	 </div>
-
-
+ </div>
+	
+</div>
 
 
   <div class="col-md-9">

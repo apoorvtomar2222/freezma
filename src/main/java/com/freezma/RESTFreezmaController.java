@@ -359,26 +359,72 @@ public class RESTFreezmaController
     	System.out.println(pass);
     	System.out.println(IDfriend);
     	
-    	List <Profile> list = ps.getAllUsers();
+    	//List <Profile> list = ps.getAllUsers();
     	  
 	    if( user != null )
 	  {
 	    	Profile p = ps.get(pass);
+	    	Profile myp = ps.get(user);
 	    	
-    	if(p.getUsername().equals(pass))	
-    	{
-    		System.out.print(p.getUsername());
-    		p.setPendingFriendList("IDfriend");
-           	ps.update(p);
+	    	if( p.getPendingFriendList() == null )
+	    	{
+	    		JSONArray jarr = new JSONArray();
+	    		
+	    		jarr.add(myp.getID().toString());
+	    		
+	    		p.setPendingFriendList(jarr.toJSONString());
+	    	}
+	    	else
+	    	{
+	    		JSONArray jarr = new JSONArray();
+	    		
+	    		JSONParser jpartemp = new JSONParser();
+	    		
+	    		try
+	    		{
+	    			jarr = (JSONArray)jpartemp.parse(p.getPendingFriendList());
+	    		}
+	    		catch(Exception e)
+	    		{
+	    			e.printStackTrace();
+	    		}
+	    		
+	    		if( !jarr.contains(myp.getID().toString()) )
+	    			jarr.add(myp.getID().toString());
+	    		
+	    		p.setPendingFriendList(jarr.toJSONString());
+	    		
+	    	}
+	    	
+	      	
+    	//if(p.getUsername().equals(pass))	
+    	
+    		System.out.println(p.getUsername());
+    		//p.setPendingFriendList((myp.getID().toString()));
+    		System.out.println("Pending:" + p.getPendingFriendList());
+    	  	
+    		try
+    		{
+    			p.setCPassword(p.getPassword());
+    			
+    			ps.update(p);
+    		}
+    		catch(Exception e)
+    		{
+    			e.printStackTrace();
+    		}
+    		
 		   
-         }
+         
     	
     }
-    	json.put("status", "Updated");
+	    JSONObject rjson = new JSONObject();
+	    
+    	rjson.put("status", "Updated");
     	
-        System.out.println(json.toString());
+        System.out.println(rjson.toString());
 	
-		return new ResponseEntity<String>(json.toString(), HttpStatus.CREATED);
+		return new ResponseEntity<String>(rjson.toString(), HttpStatus.CREATED);
     }
 	
 	

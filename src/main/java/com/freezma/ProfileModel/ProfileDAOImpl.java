@@ -41,7 +41,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 		}
 
 		public void update(Profile p) {
-			sessionFactory.getCurrentSession().update(p);
+			System.out.println("Profile Update. PID: " + p.getID());
+			
+			sessionFactory.getCurrentSession().saveOrUpdate(p);
+			sessionFactory.getCurrentSession().flush();
 			System.out.println("User updated");
 		}
 
