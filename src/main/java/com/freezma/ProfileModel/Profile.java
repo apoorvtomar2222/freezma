@@ -41,6 +41,25 @@ public class Profile implements Serializable
 	private String Phone;
 	
 	private String Image;
+	@Lob
+	private String FriendList;
+	@Lob
+	private String PendingFriendList;
+	@Lob
+	private String Blogs;
+	@Lob
+	private String Forums;
+	@Lob
+	private String ChatHistory;
+	@Lob
+	private String Notifications;
+	@Lob
+	private String Gallery;
+	
+	private boolean LoginStatus;
+	private String BasicInfo;
+
+	
 	
 	public String getFriendList() {
 		return FriendList;
@@ -119,23 +138,6 @@ public class Profile implements Serializable
 	}
 
 
-	@Lob
-	private String FriendList;
-	@Lob
-	private String PendingFriendList;
-	@Lob
-	private String Blogs;
-	@Lob
-	private String Forums;
-	@Lob
-	private String ChatHistory;
-	@Lob
-	private String Notifications;
-	@Lob
-	private String Gallery;
-	
-	private boolean LoginStatus;
-	private String BasicInfo;
 	public String getImage() {
 		return Image;
 	}

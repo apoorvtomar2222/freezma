@@ -268,31 +268,7 @@
 				}
 		);
 		
-		$scope.uploadProfileImage = function(img)
-		{
-	
-			console.log(img);
-	/* 		$UserService.updateImage(JSON.stringify($scope.updateProfileImage)).then
-				(
-			function(response)
-				{
-					if(response.status =="Updated")
-					{
-					System.out.println("Success");
-					}
-					
-				}
-				,
-			function(errResponse)
-		 		{
-				console.log('Error in updating User Data');
-				}
-
-				)
- */ 		
-		};
-
-		$scope.toggleUpdatePassword = function(response)
+			$scope.toggleUpdatePassword = function(response)
 		{
 			console.log(JSON.stringify($scope.UserPasswordDetails));
 				
@@ -405,6 +381,7 @@
 				            			
 				            			
 				            			$scope.userdata.ProfileImage = angular.copy(response.imagesrc);
+				            			
 				            			console.log( $scope.response );
 				            			console.log( $scope.imagesrc );
 				            			
@@ -448,13 +425,15 @@
 <br>
 <br>
 <br>
+<div>
+<a href= "${ pageContext.request.contextPath}/searchnewfreind" type="button" class="btn btn-success pull-right">All Profile</a>
+</div><br><br><br>
 
- <div class="col-md-3 well">
-      <div class="well">
+ <div class="col-md-3">
   
 
+<div class="well">
 <table class="table ">
-
 	
 			<tbody>
 
@@ -583,8 +562,6 @@
       <div class="row">
         <div class="col-sm-3">
           <div class="well">
-           <p>John</p>
-           <img src="bird.jpg" class="img-circle" height="55" width="55" alt="Avatar">
           </div>
         </div>
         <div class="col-sm-9">
@@ -597,7 +574,6 @@
         <div class="col-sm-3">
           <div class="well">
            <p>Bo</p>
-           <img src="bandmember.jpg" class="img-circle" height="55" width="55" alt="Avatar">
           </div>
         </div>
         <div class="col-sm-9">

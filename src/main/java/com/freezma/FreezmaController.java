@@ -47,6 +47,13 @@ JavaMailSender mail;
 	}
 	
 	
+	@RequestMapping(value="/searchnewfreind")
+	public String searchnewfreind()
+	{
+		return "searchnewfreind";
+	}
+	
+	
 	@RequestMapping("/profile")
 	public ModelAndView prfl() 
 	{
