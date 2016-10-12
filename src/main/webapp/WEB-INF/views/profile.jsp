@@ -377,8 +377,6 @@
 				            		{
 				            			$scope.response = response.status;
 				            			$scope.imagesrc = response.imagesrc;
-				            			
-				            			
 				            			$scope.userdata.ProfileImage = angular.copy(response.imagesrc);
 				            			
 				            			console.log( $scope.response );
@@ -424,6 +422,7 @@
 <br>
 <br>
 <br>
+
 <div>
 <a href= "${ pageContext.request.contextPath}/searchnewfreind" type="button" class="btn btn-success pull-right">All Profile</a>
 </div><br><br><br>

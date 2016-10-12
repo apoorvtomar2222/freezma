@@ -106,7 +106,7 @@ $UserService.fetchAllItems().then
 					function(response) 
 					{
 						$scope.data = response;
-						console.log($scope.data);
+            			console.log($scope.data);
 					}
 			,
 					function(errResponse)
@@ -125,24 +125,30 @@ $scope.AddFriend = function(ProfileID, ProfileName )
          		(
          			function(response)
          				{
-         				$scope.ProfileAssociation = response.ProfileAssociation;
-         				console.log(response.ProfileAssociation);
-            	/* 		
-         				$scope.data.ProfileAssociation = angular.copy(response.ProfileAssociation);
-         				console.log(data.ProfileAssociation);
-            	 */		
-         					
+         				
+         					console.log( response );
+         				
+         				//$scope.data.ProfileAssociation = response.ProfileAssociation;
          					if( response.status == "Updated" )
+         					{
+    						
+         						for( i = 0 ; i < $scope.data.length ; i++ )
          						{
-         						console.log(response.ProfileAssociation);
-                    				
-         						console.log( response.status );
+         							if( $scope.data[i].ProfileID == response.ProfileID )
+         							{
+         								$scope.data[i].ProfileAssociation = response.ProfileAssociation;
+         								
+         								break;
+         							}
          						}
+         						
+         						console.log( $scope.data )
+         					}
 
-            				window.setTimeout(function()
+            				/* window.setTimeout(function()
             				{
             					$scope.$apply( $scope.ProfileAssociation = '' );
-            				},3000);
+            				},3000); */
          				}
 	            , 
 	                function(errResponse)
@@ -167,6 +173,15 @@ $scope.AcceptRequest = function(ProfileID , ProfileName)
 								{
 									if(response.status =="Updated")
 										{
+										for( i = 0 ; i < $scope.data.length ; i++ )
+		         						{
+		         							if( $scope.data[i].ProfileID == response.ProfileID )
+		         							{
+		         								$scope.data[i].ProfileAssociation = response.ProfileAssociation;
+		         								break;
+		         							}
+		         						}
+		         		
 											console.log(response.status);
 										}
 
@@ -194,7 +209,15 @@ $scope.Delete = function(ProfileID, ProfileName )
       					console.log( response.status );
  						if( response.status == "Deleted" )
       					{
- 							
+ 							for( i = 0 ; i < $scope.data.length ; i++ )
+     						{
+     							if( $scope.data[i].ProfileID == response.ProfileID )
+     							{
+     								$scope.data[i].ProfileAssociation = response.ProfileAssociation;
+     								break;
+     							}
+     						}
+     		
  							$scope.deleterequest = response.status;
       						console.log( response.status );
       						

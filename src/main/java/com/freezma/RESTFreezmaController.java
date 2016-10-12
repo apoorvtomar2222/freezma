@@ -477,7 +477,7 @@ public ResponseEntity<String> AddFriend(HttpServletRequest request, HttpServletR
 		System.out.println(pass);
 		System.out.println(IDfriend);
 		// List <Profile> list = ps.getAllUsers();
-
+		JSONObject rjson = new JSONObject();
 		if (user != null) 
 			{
 				Profile p = ps.get(pass);
@@ -491,10 +491,13 @@ public ResponseEntity<String> AddFriend(HttpServletRequest request, HttpServletR
 							jarr1.add(IDfriend.toString());
 							p.setPendingFriendList(jarr.toJSONString());
 							myp.setRequestSent(jarr1.toJSONString());
+							rjson.put("ProfileAssociation","Sent");
+							rjson.put("ProfileID", p.getID());
 							p.setCPassword(p.getPassword());
 							myp.setCPassword(myp.getPassword());
 							ps.update(p);
-							ps.update(myp);	
+							ps.update(myp);
+							
 						} 
 		else
 			{
@@ -515,16 +518,21 @@ public ResponseEntity<String> AddFriend(HttpServletRequest request, HttpServletR
 					{
 						e.printStackTrace();
 					}
+				
 				if (!jarr.contains(myp.getID().toString())) 
 					{
 					if (!jarr1.contains(p.getID().toString()))
 				
-						{	
+						{		
 							System.out.println("last loop");
 							jarr.add(myp.getID().toString());
 							jarr1.add(p.getID().toString());
 							p.setPendingFriendList(jarr.toJSONString());
 							myp.setRequestSent(jarr1.toString());
+							rjson.put("ProfileAssociation","Sent");
+							rjson.put("ProfileID", p.getID());
+				
+						
 						}
 					
 					}
@@ -541,10 +549,9 @@ public ResponseEntity<String> AddFriend(HttpServletRequest request, HttpServletR
 				}
 			}
 		}
-			JSONObject rjson = new JSONObject();
+			
 			rjson.put("status", "Updated");
-			rjson.put("ProfileAssociation", "Sent");
-			System.out.println(rjson.toString());
+			System.out.println(rjson);
 			return new ResponseEntity<String>(rjson.toString(), HttpStatus.CREATED);
 	}
 	
@@ -666,7 +673,10 @@ public ResponseEntity<String> AcceptRequest(HttpServletRequest req, HttpServletR
 		
 		JSONObject json1 = new JSONObject();
 		json1.put("status","Updated");
-		System.out.println(json.toString());
+		json1.put("ProfileAssociation","Friend");
+		json1.put("ProfileID", p1.getID());
+
+		System.out.println(json1.toString());
 		
 		return  new ResponseEntity<String>(json1.toString() , HttpStatus.CREATED);
 	
@@ -695,31 +705,47 @@ public ResponseEntity<String> AcceptRequest(HttpServletRequest req, HttpServletR
 			}
 		System.out.println(json);
 		String pass = json.get("ProfileID").toString();
+		String name = json.get("FriendID").toString();
+		
+
+		System.out.println(name);
 		System.out.println(pass);
 		Profile P1 = ps.get(user);
+		Profile P2 = ps.get(name);
 		// System.out.println(P1.getPendingFriendList().toString());
 
 		if (user != null) 
 			{
 				System.out.println("test 1 passed");
 				JSONArray jarr = new JSONArray();
+				JSONArray jarr1 = new JSONArray();
 				JSONParser jpartemp = new JSONParser();
+				JSONParser jpartemp1 = new JSONParser();
 			try 
 				{
 					System.out.println("test 2 passed");
 					jarr = (JSONArray) jpartemp.parse(P1.getRequestSent());
+					jarr1 = (JSONArray) jpartemp1.parse(P2.getPendingFriendList());
+					
 					System.out.println("before test 3"+jarr.toJSONString());
 					if (jarr.contains(pass)) 
 						{
 							System.out.println("test 3 passed");
 							System.out.println(jarr.toJSONString());
+							System.out.println(jarr1.toJSONString());
 							jarr.remove(pass);
+							jarr1.remove(P1.getID());
 							System.out.println(jarr.toJSONString());
+							System.out.println(jarr1.toJSONString());
+							
 							P1.setRequestSent(jarr.toString());
 							P1.setCPassword(P1.getPassword());
 							
-							System.out.println(P1.getPendingFriendList());
+							P2.setPendingFriendList(jarr1.toJSONString());
+							P2.setCPassword(P2.getPassword());
+							
 							ps.update(P1);
+							ps.update(P2);
 						}
 				}
 
@@ -730,6 +756,9 @@ public ResponseEntity<String> AcceptRequest(HttpServletRequest req, HttpServletR
 
 			
 			json.put("status", "Deleted");
+			json.put("ProfileAssociation","notfriend");
+			json.put("ProfileID", P2.getID());
+
 		}
 
 		return new ResponseEntity<String>(json.toString(), HttpStatus.CREATED);

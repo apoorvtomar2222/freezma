@@ -271,17 +271,12 @@ JavaMailSender mail;
 			
 		return mav;
 	}
-			
 
-	
-	
 @RequestMapping(value = "/loginpage", method = RequestMethod.GET)
-public ModelAndView login() {
-
+public ModelAndView login() 
+{
 	ModelAndView mav = new ModelAndView("login");
-
 	return mav;
-
 }
 
 @RequestMapping(value = "/logout", method = RequestMethod.GET)
