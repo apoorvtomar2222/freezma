@@ -127,17 +127,16 @@
                                 return $q.reject(errResponse);
                             }
                     );
-		
-	    }
-	    
-	    };}]);
+		}
+};}]);
 	
 	
 	myApp.controller("abc",['$scope', 'UserService', 'fileUpload' ,function($scope , $UserService,$fileUpload ) {
 		$scope.data = ${data};
-		$scope.myerror = "";
-		
-		$scope.userdata;
+		/* $scope.mydata = ${mydata};
+		 */$scope.myerror = "";
+		/* console.log($scope.data);
+		 */$scope.userdata;
 		$scope.userdatatemp;
 		
 		$scope.passwordupdated;
@@ -428,9 +427,6 @@
 <div>
 <a href= "${ pageContext.request.contextPath}/searchnewfreind" type="button" class="btn btn-success pull-right">All Profile</a>
 </div><br><br><br>
-
-<div class="col-md-3">
-	<div class="well">
 		<table class="table ">
 			<tbody>
 
@@ -505,76 +501,19 @@
 			</tr>
 		</tbody>
 	 </table>
-	</div>
-
-<div class="well">
-        <p><a href="#">Interests</a></p>
-        <p>
-          <span class="label label-default">News</span>
-          <span class="label label-primary">W3Schools</span>
-          <span class="label label-success">Labels</span>
-          <span class="label label-info">Football</span>
-          <span class="label label-warning">Gaming</span>
-          <span class="label label-danger">Friends</span>
-        </p>
-</div>
-      
- <div class="alert alert-success fade in">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
-        <p><strong>Ey!</strong></p>
-        People are looking at your profile. Find out who.
- </div>
-      <p><a href="#">Link</a></p>
-      <p><a href="#">Link</a></p>
-      <p><a href="#">Link</a></p>
-
- </div>
-	
-</div>
-
-
-  <div class="col-md-9">
-    
-      <div class="row">
-        <div class="col-sm-12">
-          <div class="panel panel-default text-left">
-            <div class="panel-body">
-              <p contenteditable="true">Status: Feeling Blue</p>
-              <button type="button" class="btn btn-default btn-sm">
-                <span class="glyphicon glyphicon-thumbs-up"></span> Like
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="row">
-        <div class="col-sm-3">
-          <div class="well">
-          </div>
-        </div>
-        <div class="col-sm-9">
-          <div class="well">
-            <p>Just Forgot that I had to mention something about someone to someone about how I forgot something, but now I forgot it. Ahh, forget it! Or wait. I remember.... no I don't.</p>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-3">
-          <div class="well">
-           <p>Bo</p>
-          </div>
-        </div>
-        <div class="col-sm-9">
-          <div class="well">
-            <p>Just Forgot that I had to mention something about someone to someone about how I forgot something, but now I forgot it. Ahh, forget it! Or wait. I remember.... no I don't.</p>
-          </div>
-        </div>
-      </div>
-  
-
-
-
+	 <table style="width: 80%;" class="table">
+					
+					<tr>
+						<ul style="font-style: italic;font-weight: bold;font-size: 16px;font-family: Segoe UI, Tahoma, sans-serif; color: #333333; padding: 5px; opacity: 0.8; line-height: 20px;" class="list-group">
+							<a href="${pageContext.request.contextPath}/blog/{{userdata.ProfileName}}" class="list-group-item profile-list-group-item"><li > Blogs</li></a>
+							<a href="${pageContext.request.contextPath}/forum/{{userdata.ProfileName}}" class="list-group-item profile-list-group-item"><li> Forums</li></a>
+							<a href="${pageContext.request.contextPath}/gallery/{{userdata.ProfileName}}" class="list-group-item profile-list-group-item"><li> Gallery</li></a>							
+						</ul>
+					</tr>
+									  	
+					<br>
+									  	
+				</table>
 
 <table class=table>
 <tbody ng-if="password">
@@ -607,13 +546,11 @@
 					</button>
 							<button class="btn btn-success" ng-if="password" ng-disabled="overallValidationPasswordCheck" >
 							
-								<span ng-click="toggleUpdatePassword();">Save</span>
+			<span ng-click="toggleUpdatePassword();">Save</span>
 			 <label class="alert alert-success" style="position: absolute; top: 490px; left: 530px;" ng-if="passwordupdated=='Updated'">Updated</label>
 			 <label class="alert alert-danger" style="position: absolute; top: 490px; left: 530px; " ng-if="passwordupdated=='Password Incorrect'">Incorrect Password</label>
 			
 					</button>
 			 
-		 </div>
- 
 
  </html>

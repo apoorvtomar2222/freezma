@@ -42,7 +42,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 		public void update(Profile p) {
 			System.out.println("Profile Update. PID: " + p.getID());
-			
+			System.out.println("Profile Update. name: " + p.getUsername());
 			sessionFactory.getCurrentSession().saveOrUpdate(p);
 			sessionFactory.getCurrentSession().flush();
 			System.out.println("User updated");
@@ -57,7 +57,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 		}
 
 		public Profile get(String p) {
-			List l = this.getSessionFactory().getCurrentSession().createQuery("from Profile as p where p.Username = :username").setString("username", p).list();
+			List l = this.getSessionFactory().getCurrentSession().createQuery("from Profile as p where p.Username = :username").setString("username",p).list();
 			if (l.size()>0)
 			{
 				return (Profile)l.get(0);

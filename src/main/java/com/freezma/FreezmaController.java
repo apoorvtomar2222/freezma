@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.codehaus.jackson.JsonFactory;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,59 @@ JavaMailSender mail;
 	{
 		return "index";
 	}
+	
+	@RequestMapping(value = "/viewprofile/{profileName}")
+	public ModelAndView addproduct1(@PathVariable("profileName") String name) {
+		ModelAndView mav = new ModelAndView("viewprofile");
+		System.out.println(name);
+		Profile p = as.get(name);
+		
+		System.out.println("profile"+p);
+		JSONArray jarr = new JSONArray();
+		JSONObject jobj = new JSONObject();
+		if (p != null) 
+		{
+			jobj.put("ProfileName", p.getUsername());
+			jobj.put("ProfileImage", p.getImage());
+			jobj.put("ProfileEmail", p.getEmail());
+			jobj.put("ProfileGender", p.getGender());
+			jobj.put("ProfileAddress", p.getAddress());
+			jobj.put("ProfilePhone", p.getPhone());
+			jarr.add(jobj);
+		}
+		
+		mav.addObject("mydata", jarr.toString());
+		System.out.println("ARRAY"+jarr.toString());
+		
+		return mav;
+
+	}
+	@RequestMapping(value="/blog/{ProfileName}")
+	public ModelAndView blog(@PathVariable("ProfileName") String username)
+	{
+		ModelAndView mav = new ModelAndView("blog");
+		Profile p = as.get(username);
+		System.out.println("user profile"+p);
+		JSONObject json = new JSONObject();
+		
+		if (p.getBlogs()==null)
+			{
+				System.out.println("Test 1");
+				mav.addObject("value","No blog");
+			}
+		else
+			{
+
+				System.out.println("Test 2");
+				
+				mav.addObject("value",p.getUsername());	
+			}
+		
+		return mav;
+	}
+	
+
+	
 	
 	
 	@RequestMapping(value="/searchnewfreind")
@@ -86,7 +140,7 @@ JavaMailSender mail;
 			
 			if( p.getUsername().equals(username) )
 			{
-				jobj.put("ProfileUsername", p.getUsername());
+				jobj.put("ProfileName", p.getUsername());
 				jobj.put("ProfileImage", p.getImage());
 				jobj.put("ProfileGender", p.getGender());
 				jobj.put("ProfileAddress", p.getAddress());
@@ -104,7 +158,7 @@ JavaMailSender mail;
 	}
 	
 
-	@RequestMapping(value="/")
+	 @RequestMapping(value="/")
 	public String home()
 	{
 		urs.generateUserRoles();

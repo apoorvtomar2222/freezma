@@ -11,8 +11,7 @@ public interface ProfileDAO {
 	public void delete(long p);
 	public void update(Profile p);
 	public Profile get(String p);
-
-	    public List<Profile> getAllUsers();
+	public List<Profile> getAllUsers();
 	    
 		
 }

@@ -44,6 +44,18 @@ public class Profile implements Serializable
 	@Lob
 	private String FriendList;
 	@Lob
+	private String RequestSent;
+	
+	public String getRequestSent() {
+		return RequestSent;
+	}
+
+	public void setRequestSent(String requestSent) {
+		RequestSent = requestSent;
+	}
+
+
+	@Lob
 	private String PendingFriendList;
 	@Lob
 	private String Blogs;
