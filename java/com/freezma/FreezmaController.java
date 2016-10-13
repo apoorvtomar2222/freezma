@@ -1,7 +1,11 @@
 package com.freezma;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.List;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -23,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.freezma.Blog.Blog;
+import com.freezma.Blog.BlogService;
 import com.freezma.ProfileModel.Profile;
 import com.freezma.ProfileModel.ProfileService;
 import com.freezma.ProfileRole.ProfileRole;
@@ -36,7 +42,13 @@ public class FreezmaController {
 ProfileService as;
 
 @Autowired
+BlogService bs;
+
+@Autowired
 ProfileRoleService urs;
+
+@Autowired
+ServletContext context;
 
 @Autowired
 JavaMailSender mail;
@@ -73,33 +85,108 @@ JavaMailSender mail;
 		return mav;
 
 	}
+	
 	@RequestMapping(value="/blog/{ProfileName}")
-	public ModelAndView blog(@PathVariable("ProfileName") String username)
+	public ModelAndView blog(@PathVariable("ProfileName") String name)
 	{
-		ModelAndView mav = new ModelAndView("blog");
-		Profile p = as.get(username);
-		System.out.println("user profile"+p);
-		JSONObject json = new JSONObject();
 		
-		if (p.getBlogs()==null)
-			{
-				System.out.println("Test 1");
-				mav.addObject("value","No blog");
-			}
-		else
-			{
-
-				System.out.println("Test 2");
-				
-				mav.addObject("value",p.getUsername());	
-			}
+		ModelAndView mav = new ModelAndView("blog");
+		Profile p = as.get(name);
+		JSONArray jarr = new JSONArray();
+		
+		List<Blog> list = bs.getAllBlogs();
+		
+		System.out.println(list);
+		for(Blog b: list)
+		{
+			JSONObject jobj = new JSONObject();	
+			jobj.put("BlogID",b.getBlogID());
+			jobj.put("OwnerID",p.getID());
+			jobj.put("Description",b.getDescription());
+			
+			jarr.add(jobj);
+		}
+		mav.addObject("data",jarr.toJSONString());
+		System.out.print(jarr);
 		
 		return mav;
 	}
 	
+	
+	@RequestMapping(value="/addblog/{OwnerID}")
+	public ModelAndView addblog(@PathVariable("OwnerID") int Id) 
+	{
+		System.out.println(Id);
+		
+		ModelAndView mav = new ModelAndView("addblog");
+		mav.addObject("Id",Id);
+		mav.addObject("blog" , new Blog());
+		return mav;
+	}
+	
+	@RequestMapping(value = "/insertblog", method = RequestMethod.POST)
+	public String insertproduct(@ModelAttribute("blog") Blog p) 
+	{
+			
+			String user = "";
 
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			if (auth != null && !auth.getName().equals("anonymousUser")) 
+			{
+				user = auth.getName();
+			}
+			Profile p1 = as.get(user);
+			System.out.println(p1.getID());
+			
+			Blog i1 = bs.getBlogWithMaxId();
+
+			System.out.println(i1.getBlogID().toString());
+
+			try {
+				String path = context.getRealPath("/");
+
+				System.out.println(path);
+
+				File directory = null;
+
+				// System.out.println(ps.getProductWithMaxId());
+
+				if (p.getProductFile().getContentType().contains("image"))
+					
+				{
+					directory = new File(path + "\\resources\\images");
+
+					System.out.println(directory);
+					byte[] bytes = null;
+					File file = null;
+					bytes = p.getProductFile().getBytes();
+
+					if (!directory.exists())
+						directory.mkdirs();
+
+					file = new File(directory.getAbsolutePath() + System.getProperty("file.separator") + "image_" + i1.getBlogID() + ".jpg");
+
+					System.out.println(file.getAbsolutePath());
+
+					BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(file));
+					stream.write(bytes);
+					stream.close();
+
+				}
+
+				i1.setImage("resources/images/image_" + i1.getBlogID() + ".jpg");
+
+				bs.update(i1);
+			} 
+			catch (Exception e) 
+			{
+				e.printStackTrace();
+			}
+
+			return "redirect:blog";
+		}
 	
-	
+
 	
 	@RequestMapping(value="/searchnewfreind")
 	public String searchnewfreind()

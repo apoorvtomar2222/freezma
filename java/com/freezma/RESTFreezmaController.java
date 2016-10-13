@@ -69,7 +69,8 @@ public class RESTFreezmaController {
 			json.put("ProfileAddress", p.getAddress());
 			json.put("ProfilePhone", p.getPhone());
 			json.put("ProfileEmail", p.getEmail());
-
+			json.put("ProfileID", p.getID());
+	
 		}
 
 		System.out.println(json.toString());
@@ -353,10 +354,11 @@ public class RESTFreezmaController {
 					boolean check = true;
 					JSONArray jarr1;
 					jarr1 = new JSONArray();
-					if (check) 
+					if (check) //Test 1
 					{
 					if(P1.getPendingFriendList() != null)	
 						{
+						System.out.println("Test 1");	
 						jarr1 = (JSONArray) jpartemp.parse(P1.getPendingFriendList());// login
 																						// user
 																						// array
@@ -369,12 +371,13 @@ public class RESTFreezmaController {
 						}
 					
 						}}
-					System.out.println(p.getID());
-					System.out.println(check);
+					/*System.out.println(p.getID());
+					System.out.println(check);*/
 					if (check) 
 					{
-						if(P1.getRequestSent()!= null)
+						if(P1.getRequestSent()!= null)//Test 2
 							{
+								System.out.println("Test 2");
 								jarr1 = new JSONArray();
 								jarr1 = (JSONArray) jpartemp.parse(P1.getRequestSent());// login// user// request// sent
 								System.out.println(jarr1);
@@ -392,10 +395,12 @@ public class RESTFreezmaController {
 									}
 							}
 					}
-					if (check) 
+					
+					if (check) //Test 3
 					{
 						if(P1.getFriendList()!= null)
 							{
+								System.out.println("Test 3");
 								jarr1 = new JSONArray();
 								jarr1 = (JSONArray) jpartemp.parse(P1.getFriendList());// login// user// request// sent
 								System.out.println(jarr1);
@@ -527,7 +532,7 @@ public ResponseEntity<String> AddFriend(HttpServletRequest request, HttpServletR
 							System.out.println("last loop");
 							jarr.add(myp.getID().toString());
 							jarr1.add(p.getID().toString());
-							p.setPendingFriendList(jarr.toJSONString());
+							p.setPendingFriendList(jarr.toString());
 							myp.setRequestSent(jarr1.toString());
 							rjson.put("ProfileAssociation","Sent");
 							rjson.put("ProfileID", p.getID());
@@ -538,7 +543,7 @@ public ResponseEntity<String> AddFriend(HttpServletRequest request, HttpServletR
 					}
 				try 
 				{
-					p.setCPassword(p.getPassword());
+						p.setCPassword(p.getPassword());
 					myp.setCPassword(myp.getPassword());
 					ps.update(p);
 					ps.update(myp);
@@ -549,7 +554,7 @@ public ResponseEntity<String> AddFriend(HttpServletRequest request, HttpServletR
 				}
 			}
 		}
-			
+				
 			rjson.put("status", "Updated");
 			System.out.println(rjson);
 			return new ResponseEntity<String>(rjson.toString(), HttpStatus.CREATED);
@@ -586,10 +591,16 @@ public ResponseEntity<String> AcceptRequest(HttpServletRequest req, HttpServletR
 		
 		Profile p1 = ps.get(usertoadd);//profiletoadd
 		Profile p2 = ps.get(user);//userprofile
+		
 		System.out.println("Profile of Friend "+ p1);
 		System.out.println("User PRofile of login user"+ p2);
 		System.out.println(p2.getFriendList());
 		System.out.println(p1.getFriendList());
+		JSONArray jarr3 = new JSONArray();
+		JSONArray jarr4 = new JSONArray();
+		JSONParser jpar3 = new JSONParser();
+		JSONParser jpar4 = new JSONParser();
+
 		
 		if(user != null)
 		{
@@ -598,23 +609,35 @@ public ResponseEntity<String> AcceptRequest(HttpServletRequest req, HttpServletR
 				System.out.println("If friend list is empty");
 				JSONArray jarr = new JSONArray();
 				JSONArray jarr2 = new JSONArray();
-				JSONArray jarr3 = new JSONArray();
-				JSONArray jarr4 = new JSONArray();
 				
+				try
+				{
 				jarr.add(p2.getID().toString());
 				jarr2.add(p1.getID().toString());
-				jarr3.remove(p2.getID().toString());
-				jarr4.remove(p1.getID().toString());
+				
+				jarr3 = (JSONArray)jpar.parse(p2.getPendingFriendList().toString());///////////////// USer	
+				jarr4 = (JSONArray)jpar.parse(p1.getRequestSent().toString());	/////////////////////not USer
+				
+				jarr3.remove(p1.getID().toString());
+				jarr4.remove(p2.getID().toString());
+			
 				
 				p1.setFriendList(jarr.toString());
-				p2.setPendingFriendList(jarr3.toString());
-				p1.setRequestSent(jarr4.toString());
 				p1.setCPassword(p1.getPassword());
+				p1.setRequestSent(jarr4.toString());
+				
+				
+				p2.setPendingFriendList(jarr3.toString());
 				p2.setFriendList(jarr2.toString());
 				p2.setCPassword(p2.getPassword());
 				ps.update(p1);
 				ps.update(p2);
 
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
 			}
 		else
 		{
@@ -627,6 +650,10 @@ public ResponseEntity<String> AcceptRequest(HttpServletRequest req, HttpServletR
 			{
 				jarr= (JSONArray)jpar0.parse(p1.getFriendList());
 				jarr1=(JSONArray)jpar1.parse(p2.getFriendList());
+				jarr3 = (JSONArray)jpar.parse(p2.getPendingFriendList().toString());	
+				jarr4 = (JSONArray)jpar.parse(p1.getRequestSent().toString());	
+				
+			
 				System.out.println(jarr);
 				System.out.println(jarr1);
 			}
@@ -643,10 +670,17 @@ public ResponseEntity<String> AcceptRequest(HttpServletRequest req, HttpServletR
 							
 								jarr.add(p2.getID());
 								jarr1.add(p1.getID());
+								jarr3.remove(p1.getID().toString());
+								jarr4.remove(p2.getID().toString());
 								p1.setFriendList(jarr.toString());
-								p2.setFriendList(jarr1.toString());
 								p1.setCPassword(p1.getPassword());
+								p1.setRequestSent(jarr4.toString());
+								
+								
+								p2.setPendingFriendList(jarr3.toString());
+								p2.setFriendList(jarr1.toString());
 								p2.setCPassword(p2.getPassword());
+								
 								System.out.println("qqq "+p1.getFriendList());
 								System.out.println("dfdsfsd "+p2.getFriendList());
 						
@@ -734,7 +768,7 @@ public ResponseEntity<String> AcceptRequest(HttpServletRequest req, HttpServletR
 							System.out.println(jarr.toJSONString());
 							System.out.println(jarr1.toJSONString());
 							jarr.remove(pass);
-							jarr1.remove(P1.getID());
+							jarr1.remove(P1.getID().toString());
 							System.out.println(jarr.toJSONString());
 							System.out.println(jarr1.toJSONString());
 							
@@ -764,4 +798,170 @@ public ResponseEntity<String> AcceptRequest(HttpServletRequest req, HttpServletR
 		return new ResponseEntity<String>(json.toString(), HttpStatus.CREATED);
 	}
 
+	@CrossOrigin
+	@RequestMapping(value = "/IgnoreFriend/", method = RequestMethod.POST)
+	public ResponseEntity<String> IgnoreFriend(HttpServletRequest req, HttpServletResponse res,@RequestBody String data, UriComponentsBuilder uri) {
+		System.out.println(data);
+		String user = "null";
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication != null && !authentication.getName().equals("anonymousUser")) 
+			{
+				System.out.println(authentication.getName());
+				user = authentication.getName();
+			}
+
+		JSONObject json = new JSONObject();
+		JSONParser jpar = new JSONParser();
+		try {
+				json = (JSONObject) jpar.parse(data);
+			} 
+		catch (Exception e) 	
+			{
+				e.printStackTrace();
+			}
+		System.out.println(json);
+		String pass = json.get("ProfileID").toString();
+		String name = json.get("FriendID").toString();
+		
+
+		System.out.println(name);
+		System.out.println(pass);
+		Profile P1 = ps.get(user);
+		Profile P2 = ps.get(name);
+		// System.out.println(P1.getPendingFriendList().toString());
+
+		if (user != null) 
+			{
+				System.out.println("test 1 passed");
+				JSONArray jarr = new JSONArray();
+				JSONArray jarr1 = new JSONArray();
+				JSONParser jpartemp = new JSONParser();
+				JSONParser jpartemp1 = new JSONParser();
+			try 
+				{
+					System.out.println("test 2 passed");
+					jarr = (JSONArray) jpartemp.parse(P2.getRequestSent());
+					jarr1 = (JSONArray) jpartemp1.parse(P1.getPendingFriendList());
+					
+					System.out.println("before test 3"+jarr.toJSONString());
+					if (jarr1.contains(pass)) 
+						{
+							System.out.println("test 3 passed");
+							System.out.println(jarr.toJSONString());
+							System.out.println(jarr1.toJSONString());
+							jarr1.remove(pass);
+							jarr.remove(P1.getID());
+							System.out.println(jarr.toJSONString());
+							System.out.println(jarr1.toJSONString());
+							
+							P2.setRequestSent(jarr.toString());
+							P2.setCPassword(P2.getPassword());
+							
+							P1.setPendingFriendList(jarr1.toJSONString());
+							P1.setCPassword(P2.getPassword());
+							
+							ps.update(P1);
+							ps.update(P2);
+						}
+				}
+
+			catch (Exception e) 
+				{
+					e.printStackTrace();
+				}
+
+			
+			json.put("status", "Deleted");
+			json.put("ProfileAssociation","notfriend");
+			json.put("ProfileID", P2.getID());
+
+		}
+
+		return new ResponseEntity<String>(json.toString(), HttpStatus.CREATED);
+	}
+
+	@CrossOrigin
+	@RequestMapping(value = "/RemoveFriend/", method = RequestMethod.POST)
+	public ResponseEntity<String> RemoveFriend(HttpServletRequest req, HttpServletResponse res,@RequestBody String data, UriComponentsBuilder uri) {
+		System.out.println(data);
+		String user = "null";
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication != null && !authentication.getName().equals("anonymousUser")) 
+			{
+				System.out.println(authentication.getName());
+				user = authentication.getName();
+			}
+
+		JSONObject json = new JSONObject();
+		JSONParser jpar = new JSONParser();
+		try {
+				json = (JSONObject) jpar.parse(data);
+			} 
+		catch (Exception e) 	
+			{
+				e.printStackTrace();
+			}
+		System.out.println(json);
+
+		String pass = json.get("ProfileID").toString();
+		String name = json.get("FriendName").toString();
+		
+
+		System.out.println(name);
+		System.out.println(pass);
+		Profile P1 = ps.get(user);//User Profile
+		Profile P2 = ps.get(name);//Friend's Profile
+		// System.out.println(P1.getPendingFriendList().toString());
+
+		if (user != null) 
+			{
+				System.out.println("test 1 passed");
+				JSONArray jarr = new JSONArray();
+				JSONArray jarr1 = new JSONArray();
+				JSONParser jpartemp = new JSONParser();
+				JSONParser jpartemp1 = new JSONParser();
+			try 
+				{
+					System.out.println("test 2 passed");
+					jarr = (JSONArray) jpartemp.parse(P1.getFriendList());//login user list
+					jarr1= (JSONArray) jpartemp.parse(P2.getFriendList());//frnd to be deleted
+					
+					System.out.println("before test 3"+jarr.toJSONString());
+					if (jarr.contains(pass)) 
+						{
+							System.out.println("test 3 passed");
+							System.out.println(jarr.toJSONString());
+							System.out.println(jarr1.toJSONString());
+							jarr.remove(pass.toString());
+							jarr1.remove(P1.getID().toString());
+							System.out.println(jarr.toJSONString());
+							System.out.println(jarr1.toJSONString());
+							
+							P1.setFriendList(jarr.toString());
+							P1.setCPassword(P1.getPassword());
+							
+							P2.setFriendList(jarr1.toJSONString());
+							P2.setCPassword(P2.getPassword());
+							
+							ps.update(P1);
+							ps.update(P2);
+						}
+				}
+
+			catch (Exception e) 
+				{
+					e.printStackTrace();
+				}
+
+			
+			json.put("status", "Deleted");
+			json.put("ProfileAssociation","notfriend");
+			json.put("ProfileID", P2.getID());
+			
+		}
+
+		return new ResponseEntity<String>(json.toString(), HttpStatus.CREATED);
+	}
+
+	
 }

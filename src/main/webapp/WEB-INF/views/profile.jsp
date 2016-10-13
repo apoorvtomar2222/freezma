@@ -428,7 +428,7 @@
 </div><br><br><br>
 		<table class="table ">
 			<tbody>
-
+			
 			<tr>
 				<td> <br>
 					 <img id="profileImage" ng-src="{{userdata.ProfileImage}}"height=" 150px" width="200px" align="center">	
@@ -543,8 +543,9 @@
 							<span ng-if="!password">Change Password</span>
 							<span ng-if="password">Let It Be</span>
 					</button>
-							<button class="btn btn-success" ng-if="password" ng-disabled="overallValidationPasswordCheck" >
-							
+				
+
+			<button class="btn btn-success" ng-if="password" ng-disabled="overallValidationPasswordCheck" >
 			<span ng-click="toggleUpdatePassword();">Save</span>
 			 <label class="alert alert-success" style="position: absolute; top: 490px; left: 530px;" ng-if="passwordupdated=='Updated'">Updated</label>
 			 <label class="alert alert-danger" style="position: absolute; top: 490px; left: 530px; " ng-if="passwordupdated=='Password Incorrect'">Incorrect Password</label>

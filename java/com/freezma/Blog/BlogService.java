@@ -1,0 +1,13 @@
+package com.freezma.Blog;
+
+import java.util.List;
+
+public interface BlogService 
+{
+	public void insert(Blog p);
+	public void delete(long p);
+	public void update(Blog p);
+	public Blog get(Integer p);
+	public List<Blog> getAllBlogs();
+	public Blog getBlogWithMaxId();
+}

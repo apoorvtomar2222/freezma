@@ -12,11 +12,10 @@
 {
 	var myApp = angular.module('myApp',[]);
 	
-	myApp.factory('Userservice',['$http','$q'])
 	myApp.controller("abc",function($scope)
 		{
 		
-			$scope.data=${value};	
+			$scope.data=${data};	
 			
 		})
 };	
@@ -25,14 +24,44 @@
 <body ng-app="myApp" ng-controller="abc">
 <c:import url="head.jsp"></c:import>
 </body>
-<br><br><br><br><br><br><br><br>		
-	<div class="container">
-		<div class="Row">
-		<textarea row =10 Placeholder="Write out your mind" class="form-control form-input input-lg "></textarea>
-		<br><br>
-		<button class="btn btn-success" ng-click="AddPost();">Done</button>	
-			</div>
+<br><br><br><br><br><br><br><br>
 
-	</div>
+<div class="container">
+								
+<table class="table ">
+			<thead>
+				<tr>
+					<th>Blog</th>
+					<th>Owner ID</th>
+					<th>Description</th>
+					<th>Button</th>
+				</tr>
+			</thead>
+			
+			<tbody>
+				<tr ng-repeat="x in data">
+					
+					<td>{{x.BlogID}}</td>
+					<td>{{x.OwnerID}}</td>
+					<td>{{x.Description}}</td>
+					<td>	
+							<div>
+							<a type="button" href="${pageContext.request.contextPath}/view/" class="btn btn-success ">VIEW</a>
+							</div>
+<div>
+<a href="${pageContext.request.contextPath}/addblog/{{x.OwnerID}}" type="button" class="btn-center btn-success btn pull-right" align="right">Add Blog</a>
+</div>
+
+							<div>
+								<a href="${pageContext.request.contextPath}/update/" class="btn btn-danger">UPDATE</a>
+							</div>
 	
-	</html>
+							<div>
+								<a href="${pageContext.request.contextPath}/delete/" class="btn btn-danger">DELETE</a>
+							</div>
+					</td>
+			</tr>
+			</tbody>
+		</table>	
+	</html> 
+	</div>
