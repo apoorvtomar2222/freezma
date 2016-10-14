@@ -48,6 +48,7 @@
 			<value>com.freezma.ProfileModel</value>
 			<value>com.freezma.ProfileRole</value>
 			<value>com.freezma.Blog</value>
+			<value>com.freezma.BlogContent</value>
 			</list>
 		</property>
 	</bean>
