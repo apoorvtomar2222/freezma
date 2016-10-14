@@ -18,7 +18,7 @@ public class BlogServiceImpl implements BlogService
 		dao.insert(p);
 	}
 	@Transactional
-	public void delete(long p) 
+	public void delete(int p) 
 	{
 		dao.delete(p);
 	}

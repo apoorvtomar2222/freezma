@@ -30,14 +30,15 @@ public class BlogDAOImpl implements BlogDAO
 		
 	}
 
-	public void delete(long p) 
+	public void delete(int p) 
 	{
-		sessionFactory.getCurrentSession().delete(p);
-		
+		System.out.println("id to be deleted in dao impl  "+p);
+		sessionFactory.getCurrentSession().createQuery("delete from Blog as p where p.BlogID = :BlogID").setInteger("BlogID", p).executeUpdate();	
 	}
 
 	public void update(Blog p) 
 	{
+		System.out.println("id to be updated in dao impl  "+p.getBlogID());
 		sessionFactory.getCurrentSession().update(p);
 	}
 

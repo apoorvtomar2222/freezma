@@ -15,6 +15,7 @@ public class Blog
 	private Long BlogID;
 	private String OwnerID;
 	private String Timestamp;
+	
 	private String Status;
 	private String Description;
 	private String Image;

@@ -33,7 +33,7 @@ import com.freezma.ProfileModel.ProfileService;
 
 import javassist.compiler.ast.Variable;
 
-@CrossOrigin(origins = "http://localhost:9001", maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:9000", maxAge = 3600)
 @RestController
 public class RESTFreezmaController {
 

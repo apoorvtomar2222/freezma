@@ -91,6 +91,138 @@ JavaMailSender mail;
 
 	}
 	
+	@RequestMapping(value = "/updateblog/{BlogID}")
+	public ModelAndView update(@PathVariable("BlogID") String prodid) 
+	{
+		ModelAndView mav = new ModelAndView("updateblog");
+		System.out.println(prodid);
+		Blog b= bs.get(prodid.toString());
+		System.out.println(b.getTopicname());
+		
+		mav.addObject("blog", b);
+		
+		return mav;
+
+	}
+	
+
+	@RequestMapping(value = "/updateblog", method = RequestMethod.POST)
+	public String updateproduct(@ModelAttribute("blog") Blog p) 
+	{
+		System.out.println("this is the id "+ p.getBlogID());
+		/*
+		Blog b = bs.get(p.toString());
+		
+		System.out.println(b.getBlogID());
+*/		
+
+	String user = "";
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth != null && !auth.getName().equals("anonymousUser")) 
+		{
+			user = auth.getName();
+		}
+			Profile p1 = as.get(user);
+				/*
+			DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+			Date dateobj = new Date();
+			System.out.println(df.format(dateobj));
+			p.setOwnerID(p1.getID().toString());
+			p.setTimestamp(df.format(dateobj));
+			bs.insert(p);
+			
+			JSONObject jobj= new JSONObject();
+			JSONParser jpar= new JSONParser();
+			try
+			{
+				jobj = (JSONObject) jpar.parse(p.toString());
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		
+			String id = jobj.get("Topicname").toString();
+			System.out.println(id);
+
+			
+				
+*/
+
+
+			try {
+				
+				String path = context.getRealPath("/");
+
+				System.out.println(path);
+				
+				File directory = null;
+
+				// System.out.println(ps.getProductWithMaxId());
+
+				if (p.getProductFile().getContentType().contains("image"))
+					
+				{
+					directory = new File(path + "\\resources\\images");
+
+					System.out.println(directory);
+					byte[] bytes = null;
+					File file = null;
+					bytes = p.getProductFile().getBytes();
+
+					if (!directory.exists())
+						directory.mkdirs();
+
+					file = new File(directory.getAbsolutePath() + System.getProperty("file.separator") + "image_" + p.getBlogID() + ".jpg");
+
+					System.out.println(file.getAbsolutePath());
+
+					BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(file));
+					stream.write(bytes);
+					stream.close();
+
+				}
+
+				p.setImage("resources/images/image_" + p.getBlogID() + ".jpg");
+				//p.setID(p1.getID());
+				p.setOwnerID(p1.getID().toString());
+				
+				//p.setProductFile(p.getProductFile());
+				//b.setOwnerID(p1.getID().toString());
+				//p.setTimestamp(b.getTimestamp().toString());
+				System.out.println(p.getID());
+				System.out.println(p.getBlogID());
+				
+				bs.update(p);
+			} 
+			catch (Exception e) 
+			{
+				e.printStackTrace();
+			}
+
+			return "redirect:blog";
+		}
+	
+
+
+	///////////////////////////DElete blog
+	@RequestMapping(value = "/delete/{BlogID}")
+	public String deleteproduct1(@PathVariable("BlogID") int prodid) 
+	{
+
+		System.out.println(prodid);
+
+		bs.delete(prodid);
+		
+		return "redirect:http://localhost:9000/freezma/blog";
+		
+		
+	}
+
+	
+	
+	
 	@RequestMapping(value="/blog")
 	public ModelAndView blog()
 	{
@@ -109,6 +241,7 @@ JavaMailSender mail;
 			jobj.put("Description",b.getDescription());
 			jobj.put("Dateandtime",b.getTimestamp());
 			jobj.put("OwnerID",b.getOwnerID());
+			jobj.put("BlogID",b.getBlogID());
 			
 			jarr.add(jobj);
 		}
