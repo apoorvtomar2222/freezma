@@ -41,10 +41,10 @@ public class BlogDAOImpl implements BlogDAO
 		sessionFactory.getCurrentSession().update(p);
 	}
 
-	public Blog get(Integer p) 
+	public Blog get(String p) 
 	{
 		
-		List l = this.getSessionFactory().getCurrentSession().createQuery("from Blog as p where p.BlogID = :BlogID").setInteger("BlogID", p).list();
+		List l = this.getSessionFactory().getCurrentSession().createQuery("from Blog as p where p.BlogID = :BlogID").setString("BlogID", p).list();
 		if (l.size()>0)
 		{
 			return (Blog)l.get(0);
@@ -65,8 +65,8 @@ public class BlogDAOImpl implements BlogDAO
 	
 	public Blog getBlogWithMaxId() 
 	{
-
-		List<Blog> l = sessionFactory.getCurrentSession().createQuery("from Blog as p where p.BlogId = ( select max(a.BlogId) from Blog as a )").list();
+				//  select max(Blogid) from Blog
+		List<Blog> l = sessionFactory.getCurrentSession().createQuery("from Blog as p where p.BlogID = ( select max(a.BlogID) from Blog as a ) ").list();
 
 		if (l.size() > 0) 
 		{

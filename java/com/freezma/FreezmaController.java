@@ -3,6 +3,9 @@ package com.freezma;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -13,6 +16,7 @@ import javax.validation.Valid;
 import org.codehaus.jackson.JsonFactory;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -20,6 +24,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -86,12 +91,11 @@ JavaMailSender mail;
 
 	}
 	
-	@RequestMapping(value="/blog/{ProfileName}")
-	public ModelAndView blog(@PathVariable("ProfileName") String name)
+	@RequestMapping(value="/blog")
+	public ModelAndView blog()
 	{
 		
 		ModelAndView mav = new ModelAndView("blog");
-		Profile p = as.get(name);
 		JSONArray jarr = new JSONArray();
 		
 		List<Blog> list = bs.getAllBlogs();
@@ -100,9 +104,11 @@ JavaMailSender mail;
 		for(Blog b: list)
 		{
 			JSONObject jobj = new JSONObject();	
-			jobj.put("BlogID",b.getBlogID());
-			jobj.put("OwnerID",p.getID());
+			jobj.put("BlogImage", b.getImage());
+			jobj.put("Topicname",b.getTopicname());
 			jobj.put("Description",b.getDescription());
+			jobj.put("Dateandtime",b.getTimestamp());
+			jobj.put("OwnerID",b.getOwnerID());
 			
 			jarr.add(jobj);
 		}
@@ -112,14 +118,26 @@ JavaMailSender mail;
 		return mav;
 	}
 	
-	
-	@RequestMapping(value="/addblog/{OwnerID}")
-	public ModelAndView addblog(@PathVariable("OwnerID") int Id) 
+	////////////////////////////////////////////////////////////////VIEW BLOGS
+	@RequestMapping(value="/viewblog/{OwnerID}")
+	public ModelAndView viewblog(@PathVariable("OwnerID") String Id)
 	{
-		System.out.println(Id);
+		
+		ModelAndView mav = new ModelAndView("viewblog");
+		
+		return mav;
+		
+	}
+	
+	
+	
+	@RequestMapping(value="/addblog/")
+	public ModelAndView addblog() 
+	{
+		
 		
 		ModelAndView mav = new ModelAndView("addblog");
-		mav.addObject("Id",Id);
+		
 		mav.addObject("blog" , new Blog());
 		return mav;
 	}
@@ -127,22 +145,46 @@ JavaMailSender mail;
 	@RequestMapping(value = "/insertblog", method = RequestMethod.POST)
 	public String insertproduct(@ModelAttribute("blog") Blog p) 
 	{
-			
-			String user = "";
-
-			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			if (auth != null && !auth.getName().equals("anonymousUser")) 
-			{
-				user = auth.getName();
-			}
+		String user = "";
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth != null && !auth.getName().equals("anonymousUser")) 
+		{
+			user = auth.getName();
+		}
 			Profile p1 = as.get(user);
-			System.out.println(p1.getID());
+		
+			DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+			Date dateobj = new Date();
+			System.out.println(df.format(dateobj));
+			p.setOwnerID(p1.getID().toString());
+			p.setTimestamp(df.format(dateobj));
+			bs.insert(p);
 			
-			Blog i1 = bs.getBlogWithMaxId();
+			/*JSONObject jobj= new JSONObject();
+			JSONParser jpar= new JSONParser();
+			try
+			{
+				jobj = (JSONObject) jpar.parse(p.toString());
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		
+			String id = jobj.get("Topicname").toString();
+			System.out.println(id);
 
-			System.out.println(i1.getBlogID().toString());
+*/			
+				
 
 			try {
+				
+				Blog i1 = bs.getBlogWithMaxId();
+				
+				System.out.println(i1.getBlogID().toString());
+				
+			
 				String path = context.getRealPath("/");
 
 				System.out.println(path);

@@ -19,10 +19,10 @@
 	<br>
 	<br>
 	<br>
-
+<div class="container">
 
 				
-	<form:form action="insertblog" method="post" modelAttribute="blog" enctype="multipart/form-data">
+	<form:form action="${pageContext.request.contextPath}/insertblog" method="post" modelAttribute="blog" enctype="multipart/form-data">
 		<div class="container">
 
 			<table>
@@ -62,4 +62,5 @@
 	</form:form>
 	<br>
 	<br>
+</div>
 	</html>

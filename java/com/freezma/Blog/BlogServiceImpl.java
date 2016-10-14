@@ -29,7 +29,7 @@ public class BlogServiceImpl implements BlogService
 	}
 	
 	@Transactional
-	public Blog get(Integer p) 
+	public Blog get(String p) 
 	{
 		return dao.get(p);
 	}

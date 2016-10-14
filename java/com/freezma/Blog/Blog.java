@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Entity 
 public class Blog 
 {
-	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE)
+	@Id @GeneratedValue(strategy=GenerationType.AUTO)
 	private Long BlogID;
 	private String OwnerID;
 	private String Timestamp;

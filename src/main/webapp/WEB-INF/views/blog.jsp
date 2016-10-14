@@ -23,45 +23,40 @@
 </script>
 <body ng-app="myApp" ng-controller="abc">
 <c:import url="head.jsp"></c:import>
-</body>
+
 <br><br><br><br><br><br><br><br>
 
 <div class="container">
-								
+	<div>
+		<a href="${pageContext.request.contextPath}/addblog/" type="button" class="btn-center btn-success btn pull-right" align="right">Add Blog</a>
+	</div>	
 <table class="table ">
 			<thead>
 				<tr>
-					<th>Blog</th>
-					<th>Owner ID</th>
+					<th>Image</th>
+					<th>Topic Name</th>
 					<th>Description</th>
+					<th>Posted On</th>
 					<th>Button</th>
 				</tr>
 			</thead>
 			
 			<tbody>
 				<tr ng-repeat="x in data">
-					
-					<td>{{x.BlogID}}</td>
-					<td>{{x.OwnerID}}</td>
+					<td><img alt="No Image" ng-src="${pageContext.request.contextPath}/{{x.BlogImage}}" width="100px" height="100px"></td>
+					<td>{{x.Topicname}}{{x.OwnerID}}</td>
 					<td>{{x.Description}}</td>
-					<td>	
-							<div>
-							<a type="button" href="${pageContext.request.contextPath}/view/" class="btn btn-success ">VIEW</a>
-							</div>
-<div>
-<a href="${pageContext.request.contextPath}/addblog/{{x.OwnerID}}" type="button" class="btn-center btn-success btn pull-right" align="right">Add Blog</a>
+					<td>{{x.Dateandtime}}</td>
+					<td>	<div><a type="button" href="${pageContext.request.contextPath}/viewblog/{{x.OwnerID}}" class="btn btn-success ">VIEW</a></div>
+							<div><a href="${pageContext.request.contextPath}/update/" class="btn btn-danger">UPDATE</a></div>
+							<div><a href="${pageContext.request.contextPath}/delete/" class="btn btn-danger">DELETE</a></div>
+					</td>
+				</tr>
+			</tbody>
+</table>	
+
 </div>
 
-							<div>
-								<a href="${pageContext.request.contextPath}/update/" class="btn btn-danger">UPDATE</a>
-							</div>
+</body>
+</html> 
 	
-							<div>
-								<a href="${pageContext.request.contextPath}/delete/" class="btn btn-danger">DELETE</a>
-							</div>
-					</td>
-			</tr>
-			</tbody>
-		</table>	
-	</html> 
-	</div>
