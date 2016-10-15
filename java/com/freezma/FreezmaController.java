@@ -11,6 +11,7 @@ import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.tree.ExpandVetoException;
 import javax.validation.Valid;
 
 import org.codehaus.jackson.JsonFactory;
@@ -34,6 +35,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.freezma.Blog.Blog;
 import com.freezma.Blog.BlogService;
+import com.freezma.BlogContent.BlogContent;
+import com.freezma.BlogContent.BlogContentService;
 import com.freezma.ProfileModel.Profile;
 import com.freezma.ProfileModel.ProfileService;
 import com.freezma.ProfileRole.ProfileRole;
@@ -55,6 +58,9 @@ ProfileRoleService urs;
 @Autowired
 ServletContext context;
 
+@Autowired 
+BlogContentService bcs;
+
 @Autowired
 JavaMailSender mail;
 
@@ -63,6 +69,134 @@ JavaMailSender mail;
 	{
 		return "index";
 	}
+	////////////////////////////////////////////////////// For Adding content in blog
+	
+	@RequestMapping(value="/blogcontent/{BlogID}")
+	public ModelAndView blogcontent(@PathVariable("BlogID") String id)
+	{
+		System.out.println("this is id "+id);
+		ModelAndView mav = new ModelAndView("blogcontent");
+		String user ="";
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if(authentication!=null && !authentication.equals("annonymousUser"))
+		{
+			user = authentication.getName();
+		}
+
+		/*<%
+if (request.isUserInRole("ADMIN"))
+{
+%>
+
+<%							
+}
+%>
+
+*/
+		Profile pu = as.get(user); 
+		Blog b = bs.get(id);
+		BlogContent bc= bcs.get(id);
+
+		
+		List<BlogContent> list = bcs.getAllBlogs();
+		System.out.println("this is bc "+bc);
+		System.out.println("this is list is "+list);
+		
+		mav.addObject("BlogId",b.getBlogID());
+		mav.addObject("Username",pu.getUsername());
+		mav.addObject("Topicname",b.getTopicname());
+		mav.addObject("Description",b.getDescription());
+		
+		JSONArray jarr = new JSONArray();
+		JSONObject jobj = new JSONObject();
+
+		System.out.println(b.getBlogID());
+		//System.out.println(bc.getBlogID());
+		
+		
+		if(b.getBlogID().toString()!=null&& bc!=null)
+		{
+			System.out.println("33333");
+			for(BlogContent b2:list)
+				{
+					System.out.println("555555555555");
+					System.out.println("b2.getBlogID is " +b2.getBlogID());
+						if( b2.getBlogID().equals(b.getBlogID().toString()) )
+							{
+								System.out.println("666666666");
+								jobj.put("Value", b2.getValue());
+								jarr.add(jobj);
+								
+							}
+				}
+		}
+		else if(bc==null)
+			{
+				jobj.put("Value", "no post");
+				jarr.add(jobj);
+			}
+		mav.addObject("mydata", jarr.toJSONString());
+		System.out.println("ARRAY"+jarr.toString());
+	
+		mav.addObject("blogcontent", new BlogContent());
+		return mav;
+	}
+	
+	@RequestMapping(value = "/addcontent", method = RequestMethod.POST)
+	public String addcontent(@ModelAttribute("blog") BlogContent p) 
+	{
+		
+		System.out.println("this is the id "+ p.getBlogID());
+		
+		
+		BlogContent bc = bcs.get(p.getBlogID());
+		
+		System.out.println(bc);
+		
+		String user = "";
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth != null && !auth.getName().equals("anonymousUser")) 
+		{
+			user = auth.getName();
+		}
+			Profile p1 = as.get(user);
+			
+			DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+			Date dateobj = new Date();
+			
+			System.out.println(df.format(dateobj));
+			
+			p.setBlogID(p.getBlogID());
+			p.setTimeStamp(df.format(dateobj));
+			p.setValue(p.getValue());
+			
+			bcs.insert(p);
+		
+			return "redirect:http://localhost:9000/freezma/blog/{{x.BlogID}}";
+		}
+	
+
+	@RequestMapping(value = "/like", method = RequestMethod.POST)
+	public String like() 
+	{
+		
+				
+			return "redirect:blog";
+		}
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	@RequestMapping(value = "/viewprofile/{profileName}")
 	public ModelAndView addproduct1(@PathVariable("profileName") String name) {
@@ -124,33 +258,7 @@ JavaMailSender mail;
 			user = auth.getName();
 		}
 			Profile p1 = as.get(user);
-				/*
-			DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
-			Date dateobj = new Date();
-			System.out.println(df.format(dateobj));
-			p.setOwnerID(p1.getID().toString());
-			p.setTimestamp(df.format(dateobj));
-			bs.insert(p);
-			
-			JSONObject jobj= new JSONObject();
-			JSONParser jpar= new JSONParser();
-			try
-			{
-				jobj = (JSONObject) jpar.parse(p.toString());
-			}
-			catch(Exception e)
-			{
-				e.printStackTrace();
-			}
 		
-			String id = jobj.get("Topicname").toString();
-			System.out.println(id);
-
-			
-				
-*/
-
-
 			try {
 				
 				String path = context.getRealPath("/");
@@ -229,10 +337,18 @@ JavaMailSender mail;
 		
 		ModelAndView mav = new ModelAndView("blog");
 		JSONArray jarr = new JSONArray();
-		
+		String user="";
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth != null && !auth.getName().equals("anonymousUser")) 
+		{
+			user = auth.getName();
+		}
+		Profile p =as.get(user);
 		List<Blog> list = bs.getAllBlogs();
 		
 		System.out.println(list);
+		System.out.println("id1"+p.getID());
+
 		for(Blog b: list)
 		{
 			JSONObject jobj = new JSONObject();	
@@ -244,6 +360,7 @@ JavaMailSender mail;
 			jobj.put("BlogID",b.getBlogID());
 			
 			jarr.add(jobj);
+		
 		}
 		mav.addObject("data",jarr.toJSONString());
 		System.out.print(jarr);

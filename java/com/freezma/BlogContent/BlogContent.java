@@ -16,8 +16,8 @@ public class BlogContent
 	}
 	@Id @GeneratedValue(strategy=GenerationType.AUTO)
 	private long ContentID;
-	private long BlogID;
-	private long TimeStamp;
+	private String BlogID;
+	private String TimeStamp;
 	
 	public long getContentID() {
 		return ContentID;
@@ -25,16 +25,18 @@ public class BlogContent
 	public void setContentID(long contentID) {
 		ContentID = contentID;
 	}
-	public long getBlogID() {
+
+	
+	public String getBlogID() {
 		return BlogID;
 	}
-	public void setBlogID(long blogID) {
+	public void setBlogID(String blogID) {
 		BlogID = blogID;
 	}
-	public long getTimeStamp() {
+	public String getTimeStamp() {
 		return TimeStamp;
 	}
-	public void setTimeStamp(long timeStamp) {
+	public void setTimeStamp(String timeStamp) {
 		TimeStamp = timeStamp;
 	}
 	public String getValue() {

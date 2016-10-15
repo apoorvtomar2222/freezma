@@ -3,11 +3,12 @@ package com.freezma.BlogContent;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.freezma.Blog.Blog;
 import com.freezma.Blog.BlogDAO;
-
+@Service
 public class BlogContentServiceImpl implements BlogContentService
 {
 

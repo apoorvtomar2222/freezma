@@ -414,7 +414,7 @@
 
 <body ng-app="myApp" ng-controller="abc">
 <c:import url="head.jsp"></c:import>
-
+<div class="container">
 <br>
 
 <br>
@@ -546,11 +546,10 @@
 				
 
 			<button class="btn btn-success" ng-if="password" ng-disabled="overallValidationPasswordCheck" >
-			<span ng-click="toggleUpdatePassword();">Save</span>
-			 <label class="alert alert-success" style="position: absolute; top: 490px; left: 530px;" ng-if="passwordupdated=='Updated'">Updated</label>
-			 <label class="alert alert-danger" style="position: absolute; top: 490px; left: 530px; " ng-if="passwordupdated=='Password Incorrect'">Incorrect Password</label>
-			
-					</button>
+				<span ng-click="toggleUpdatePassword();">Save</span>
+			 	<label class="alert alert-success" style="position: absolute; top: 490px; left: 530px;" ng-if="passwordupdated=='Updated'">Updated</label>
+			 	<label class="alert alert-danger" style="position: absolute; top: 490px; left: 530px; " ng-if="passwordupdated=='Password Incorrect'">Incorrect Password</label>
+			</button>
 			 
-
+</div>
  </html>

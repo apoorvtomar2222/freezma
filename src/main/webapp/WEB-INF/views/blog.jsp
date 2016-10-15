@@ -44,7 +44,7 @@
 			<tbody>
 				<tr ng-repeat="x in data">
 					<td><img alt="No Image" ng-src="${pageContext.request.contextPath}/{{x.BlogImage}}" width="100px" height="100px"></td>
-					<td><a href="${pageContext.request.contextPath}/blogcontent"/>{{x.Topicname}}</td>
+					<td><a href="${pageContext.request.contextPath}/blogcontent/{{x.BlogID}}"/>{{x.Topicname}}</td>
 					<td>{{x.Description}}</td>
 					<td>{{x.Dateandtime}}</td>
 					<td>	<div><a type="button" href="${pageContext.request.contextPath}/viewblog/{{x.OwnerID}}" class="btn btn-success ">VIEW</a></div>

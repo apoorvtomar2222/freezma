@@ -47,7 +47,7 @@ public class BlogContentDAOImpl implements BlogContentDAO
 		public BlogContent get(String p) 
 		{
 			
-			List l = this.getSessionFactory().getCurrentSession().createQuery("from Blog as p where p.BlogID = :BlogID").setString("BlogID", p).list();
+			List l = this.getSessionFactory().getCurrentSession().createQuery("from BlogContent as p where p.BlogID = :BlogID").setString("BlogID", p).list();
 			if (l.size()>0)
 			{
 				return (BlogContent)l.get(0);
@@ -61,7 +61,7 @@ public class BlogContentDAOImpl implements BlogContentDAO
 		
 		public List<BlogContent> getAllBlogs() 
 		{
-			List<BlogContent> list = (List<BlogContent>)sessionFactory.getCurrentSession().createQuery("from Blog").list();
+			List<BlogContent> list = (List<BlogContent>)sessionFactory.getCurrentSession().createQuery("from BlogContent").list();
 			return list;
 			
 		}
@@ -69,7 +69,7 @@ public class BlogContentDAOImpl implements BlogContentDAO
 		public BlogContent getBlogWithMaxId() 
 		{
 					//  select max(Blogid) from Blog
-			List<BlogContent> l = sessionFactory.getCurrentSession().createQuery("from Blog as p where p.BlogID = ( select max(a.BlogID) from Blog as a ) ").list();
+			List<BlogContent> l = sessionFactory.getCurrentSession().createQuery("from BlogContent as p where p.BlogID = ( select max(a.BlogID) from Blog as a ) ").list();
 
 			if (l.size() > 0) 
 			{
