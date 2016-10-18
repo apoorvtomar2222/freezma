@@ -6,6 +6,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.freezma.BlogContent.BlogContent;
 
@@ -13,6 +14,20 @@ import com.freezma.BlogContent.BlogContent;
 @EnableTransactionManagement
 public class BlogCommentDAOImpl implements BlogCommentDAO 
 {
+	
+	
+	@Autowired
+	private SessionFactory sessionFactory;
+ 
+	public SessionFactory getSessionFactory() 
+	{
+		return sessionFactory;
+	}
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+
 
 	public void insert(BlogComment p) 
 	{
@@ -42,7 +57,7 @@ public class BlogCommentDAOImpl implements BlogCommentDAO
 		}
 		
 	}
-
+	@Transactional
 	public List<BlogComment> getAllBlogs() 
 	{
 		List<BlogComment> list = (List<BlogComment>)sessionFactory.getCurrentSession().createQuery("from BlogComment").list();
@@ -50,20 +65,7 @@ public class BlogCommentDAOImpl implements BlogCommentDAO
 
 	}
 
-	public BlogComment getBlogWithMaxId() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Autowired
-	private SessionFactory sessionFactory;
- 
-	public SessionFactory getSessionFactory() 
-	{
-		return sessionFactory;
-	}
-
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
+	
+	
 
 }

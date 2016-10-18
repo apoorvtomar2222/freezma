@@ -11,12 +11,6 @@ import org.hibernate.annotations.Generated;
 @Entity
 public class BlogComment 
 {
-	public String getOwnerID() {
-		return OwnerID;
-	}
-	public void setOwnerID(String ownerID) {
-		OwnerID = ownerID;
-	}
 	@Id@GeneratedValue(strategy=GenerationType.AUTO)	
 	private long CommentID;
 	private String ContentID;
@@ -59,6 +53,12 @@ public class BlogComment
 	}
 	public void setLikeList(String likeList) {
 		LikeList = likeList;
+	}
+	public String getOwnerID() {
+		return OwnerID;
+	}
+	public void setOwnerID(String ownerID) {
+		OwnerID = ownerID;
 	}
 	
 }

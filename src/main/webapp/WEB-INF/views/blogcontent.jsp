@@ -114,13 +114,14 @@ myapp.factory('UserService',['$http','$q', function($http, $q){
 myapp.controller("abc",['$scope','UserService',function($scope,$UserService)
 		{
 			$scope.mydata=${mydata};
-			
+			console.log($scope.mydata);
 		
 			
 			$scope.currentUser = '${pageContext.request.userPrincipal.name}';
 			$scope.check=false;
 			$scope.frequest;
 			$scope.validationcheck=false;
+		
 			
 			$scope.data;
 			
@@ -143,7 +144,8 @@ myapp.controller("abc",['$scope','UserService',function($scope,$UserService)
 			
 
 	 	console.log('this is liked or not overall'+$scope.alreadyliked )
-	 	 $scope.updateLike = function(blogid)
+	 	 
+	 	$scope.updateLike = function(blogid)
 			{
 				$scope.frequest={"BlogID": blogid};
 				console.log($scope.frequest);
@@ -156,7 +158,7 @@ myapp.controller("abc",['$scope','UserService',function($scope,$UserService)
 						//console.log(response);
 						//console.log(response.length);
 						
-						console.log("$scope.mydata.length"+$scope.mydata.length);
+						console.log("$scope.mydata.length   "+$scope.mydata.length);
 						//console.log("$scope.mydata.Contentid"+ ${mydata});
 						console.log("response.id"+response.id);
 						
@@ -167,13 +169,17 @@ myapp.controller("abc",['$scope','UserService',function($scope,$UserService)
 								{
 								if($scope.mydata[i].Contentid == response.id)
 								{
-									console.log($scope.mydata[i]);
+									console.log("this is in update like  "+$scope.mydata[i]);
 									console.log($scope.mydata[i].Contentid);
 									console.log($scope.mydata[i].length12);
-									$scope.mydata[i].length12 = response.length;
+									$scope.mydata[i].length12 = angular.copy(response.length);
+									$scope.mydata[i].check1=angular.copy(response.check1);
+									
 									//$scope.alreadyliked=true;
 									break;
 								}
+							}
+							
 								console.log($scope.mydata[i].length12);
 								
 								
@@ -185,7 +191,7 @@ myapp.controller("abc",['$scope','UserService',function($scope,$UserService)
  		
  
 							}
-					},
+					,
 					 
 	                function(errResponse)
 	                	{
@@ -204,7 +210,8 @@ myapp.controller("abc",['$scope','UserService',function($scope,$UserService)
 		    					function(response) 
 		    					{
 		    						$scope.datafc = response;
-		                			console.log($scope.datafc);
+		    						
+		                			console.log("ths is in fetch comment "+$scope.datafc);
 		    					}
 		    			,
 		    					function(errResponse)
@@ -226,16 +233,33 @@ myapp.controller("abc",['$scope','UserService',function($scope,$UserService)
 					{
 						if(response.status=="updated")
 						{
-							
+							console.log(response);
 							console.log(response.status);
-										/* 	for( i = 0 ; i < $scope.datafc.length ; i++ )
+							console.log(response.Contentid );
+							/* for( i = 0 ; i < $scope.datafc.length ; i++ )
  								{
  								if( $scope.datafc[i].Contentid == response.Contentid )
  									{
- 										console.log($scope.datafc);
+ 										console.log($scope.datafc[i].Contentid);
+ 									//	$scope.datafc=angular.copy(response);
  										break;
  									}
  								} */
+ 								
+							$UserService.fetchcomment().then
+						    (
+						    					function(response) 
+						    					{
+						    						$scope.datafc = response;
+						    						
+						                			console.log("ths is in fetch comment "+$scope.datafc);
+						    					}
+						    			,
+						    					function(errResponse)
+						    					{
+						    						console.error('Error while Sending Data.');
+						    					}
+						    );
 						}
 					
 					},
@@ -287,11 +311,13 @@ myapp.controller("abc",['$scope','UserService',function($scope,$UserService)
 				<div style="font-size:18px; background-color: #D3D3D3; padding:10px;">{{x.Value}}</div>
 				<br>
       	</div>
+      	
+      	
       	<div ng-if="!validationcheck">
-	    		<button  ng-show="x.length12=='0'" type="button"  class="btn btn-info btn-lg center"  ng-click="updateLike(x.blogid);">Like</button>
-	    	   	<button  ng-hide="x.length12=='0' && validationcheck"type="button"  class="btn btn-info btn-lg center" >UnLike </button>
+	    		<button  ng-show="x.check1=='false'" type="button"  class="btn btn-info btn-lg center"  ng-click="updateLike(x.blogid);">Like</button>
+	    	   	<button  ng-show="x.check1=='true'" type="button"  class="btn btn-info btn-lg center" >UnLike </button>
     	   		<label>Total Likes : {{x.length12}}</label>
-    	   		<!-- <input type="hidden" ng-value="ContentValue.ContentID" ng-init="ContentValue.ContentID=x.Contentid"/> -->
+    	  
 		</div>
 		<br>
 		<div class="row">		
@@ -301,6 +327,7 @@ myapp.controller("abc",['$scope','UserService',function($scope,$UserService)
 				<div class="col-sm-2">	
 						<button class="btn btn-success btn-center" ng-click="submitComment(CommentValue,x.Contentid);" >Comment</button>
 				</div>
+				<div></div>
 		</div>
 		<br><br>
 <div style="  padding:15px;" ng-if="x.Contentid==y.Contentid" ng-repeat="y in datafc">

@@ -10,6 +10,6 @@ public interface BlogCommentService
 	public void update(BlogComment p);
 	public BlogComment get(String p);
 	public List<BlogComment> getAllBlogs();
-	public BlogComment getBlogWithMaxId();
+	
 
 }

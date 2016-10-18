@@ -11,6 +11,7 @@ public class BlogCommentServiceImpl implements BlogCommentService
 {
 	@Autowired
 	BlogCommentDAO dao;
+	
 	@Transactional
 	public void insert(BlogComment p) 
 	{
@@ -21,6 +22,7 @@ public class BlogCommentServiceImpl implements BlogCommentService
 	{
 		dao.delete(p);
 	}
+	
 	@Transactional
 	public void update(BlogComment p) 
 	{
@@ -31,15 +33,11 @@ public class BlogCommentServiceImpl implements BlogCommentService
 	public BlogComment get(String p) {
 		return dao.get(p);
 	}
+	
 	@Transactional
 	public List<BlogComment> getAllBlogs() 
 	{
 		return dao.getAllBlogs();
-	}
-	@Transactional
-	public BlogComment getBlogWithMaxId() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

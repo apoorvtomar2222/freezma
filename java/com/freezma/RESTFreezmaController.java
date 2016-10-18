@@ -465,7 +465,7 @@ public class RESTFreezmaController {
 			jarr.add(jobj);
 		}
 	}
-*/		System.out.println(jarr);
+*/		System.out.println("this is from fetchcommment rest controller "+jarr);
 
 		return new ResponseEntity<String>(jarr.toString(), HttpStatus.CREATED);
 	}
@@ -984,7 +984,8 @@ public ResponseEntity<String> AcceptRequest(HttpServletRequest req, HttpServletR
 	public ResponseEntity<String> updateLikes(HttpServletRequest request, HttpServletResponse response,@RequestBody String data, UriComponentsBuilder ucBuilder) 
 	{
 			System.out.println(data);
-			JSONObject rjson = new JSONObject();					
+			JSONObject rjson = new JSONObject();
+			JSONArray jarr = new JSONArray();
 			String user = null;
 			
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -1017,7 +1018,6 @@ public ResponseEntity<String> AcceptRequest(HttpServletRequest req, HttpServletR
 			if(blogid.equals(String.valueOf(bc.getContentID()) ))
 			{	
 				System.out.println("Entered the if ");
-				JSONArray jarr = new JSONArray();
 				jarr.add(p.getID().toString());
 				bc.setLikeList(jarr.toString());
 				System.out.println(jarr.toString());
@@ -1028,7 +1028,7 @@ public ResponseEntity<String> AcceptRequest(HttpServletRequest req, HttpServletR
 	}
 	else 
 	{
-		JSONArray jarr = new JSONArray();
+		
 		JSONParser jpar1 = new JSONParser();
 		try
 		{
@@ -1045,20 +1045,25 @@ public ResponseEntity<String> AcceptRequest(HttpServletRequest req, HttpServletR
 		bc.setLikeList(jarr.toString());
 		System.out.println(jarr.toString());
 		bcs.update (bc);
-	}
-
-		 int length = jarr.size();
-         
-         System.out.println("String array length is: " + length);
 	
-		
+	  
+		}
+		 
+	}
+	
+
+		int length = jarr.size();
+		System.out.println("String array length is: " + length);
 		rjson.put("status", "Updated");
 		rjson.put("length", length);
 		rjson.put("id", bc.getContentID());
-				System.out.println(rjson);
+		rjson.put("check1", "true");
+		
+		System.out.println("id"+bc.getContentID());
+		
+		System.out.println(rjson);
 				
-				
-		}
+
 	
 	return new ResponseEntity<String>(rjson.toString(), HttpStatus.CREATED);
 	
@@ -1087,8 +1092,6 @@ public ResponseEntity<String> AcceptRequest(HttpServletRequest req, HttpServletR
         {
 			System.out.println("ERROR READING ADDRESSES");
         }
-    	
-        
         String CommentContent = jobj.get("CommentValue").toString();
         String ContentID = jobj.get("CommentID").toString();
         System.out.println(CommentContent);
@@ -1133,11 +1136,13 @@ public ResponseEntity<String> AcceptRequest(HttpServletRequest req, HttpServletR
 	public ResponseEntity<String> fetchcomment(HttpServletRequest request, HttpServletResponse response,UriComponentsBuilder ucBuilder) {
 
 		String user = null;
+	
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (auth != null && !auth.getName().equals("anonymousUser")) 
 		{
 			user = auth.getName();
 		}
+		Profile pu = ps.get(user);
 		List<Profile> list1 = ps.getAllUsers();
 		List<BlogComment> list = bcms.getAllBlogs();
 		JSONArray jarr = new JSONArray();
@@ -1156,9 +1161,12 @@ public ResponseEntity<String> AcceptRequest(HttpServletRequest req, HttpServletR
 		jobj.put("CommentValue",b.getCommentValue());
 		jobj.put("CommentTimeStamp",b.getTimeStamp());
 		jobj.put("Contentid",b.getContentID());
+		
+		
+		
 		jarr.add(jobj);
 		}
-		System.out.println(jarr);
+		System.out.println("this is fetch comment "+jarr);
 		return new ResponseEntity<String>(jarr.toString(), HttpStatus.CREATED);
 	}
 }

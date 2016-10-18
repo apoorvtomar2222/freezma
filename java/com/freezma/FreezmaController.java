@@ -35,6 +35,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.freezma.Blog.Blog;
 import com.freezma.Blog.BlogService;
+import com.freezma.BlogComment.BlogComment;
+import com.freezma.BlogComment.BlogCommentDAO;
 import com.freezma.BlogContent.BlogContent;
 import com.freezma.BlogContent.BlogContentService;
 import com.freezma.ProfileModel.Profile;
@@ -60,6 +62,8 @@ ServletContext context;
 
 @Autowired 
 BlogContentService bcs;
+@Autowired
+BlogCommentDAO bcms;
 
 @Autowired
 JavaMailSender mail;
@@ -81,6 +85,7 @@ JavaMailSender mail;
 	public ModelAndView blogcontent(@PathVariable("BlogID") String id)
 	{
 		System.out.println("this is id "+id);
+		
 		ModelAndView mav = new ModelAndView("blogcontent");
 		String user ="";
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -88,10 +93,15 @@ JavaMailSender mail;
 		{
 			user = authentication.getName();
 		}
+		
 			
 		List<Profile> list1 = as.getAllUsers();
+		try{
+		List<BlogComment> list2 = bcms.getAllBlogs();
+		List<BlogContent> list = bcs.getAllBlogs();
 		
 		Blog b = bs.get(id);
+		
 		for(Profile p:list1)
 		{
 		/*	System.out.println("p.getUsername()" + p.getUsername());
@@ -105,22 +115,16 @@ JavaMailSender mail;
 			}
 			
 		}
-		//Profile pu = as.get(user);
-	
-		
-		List<BlogContent> list = bcs.getAllBlogs();
-		
+		Profile pu = as.get(user);
 		System.out.println("this is list is "+list);
 		
 		mav.addObject("BlogId",b.getBlogID());
 		mav.addObject("Topicname",b.getTopicname());
 		mav.addObject("Description",b.getDescription());
 		
-		JSONArray jarr = new JSONArray();
 		
+		JSONArray jarr = new JSONArray();
 
-		System.out.println(b.getBlogID());
-		//System.out.println(bc.getBlogID());
 		
 		
 		if(b.getBlogID().toString()!=null&& list!=null)
@@ -128,23 +132,73 @@ JavaMailSender mail;
 			System.out.println("33333");
 			for(BlogContent b2:list)
 				{
+				
+				
 				JSONObject jobj = new JSONObject();
 					System.out.println("555555555555");
-					System.out.println("b2.getBlogID is " +b2.getBlogID()+"value"+b2.getValue());
+					System.out.println("b2.getBlogID is " +b2.getBlogID()+"  value :  "+b2.getValue());
 					System.out.println("b.getBlogID().toString() is " +b.getBlogID().toString());
-						if(b2.getBlogID().equals(b.getBlogID().toString()))
+					
+					
+					
+					for(BlogComment b3:list2)
+					{
+						if(!String.valueOf(b2.getContentID()).equals(null) && !String.valueOf(b2.getContentID()).equals(null) )
+						{
+							
+							System.out.println("comment matched");
+							System.out.println("comment matched");
+							
+							if(String.valueOf(b2.getContentID()).equals(b3.getContentID()) )
+							{
+								System.out.println("comment matched");
+								jobj.put("CommentValue", b3.getCommentValue());
+								
+							}
+						}
+					}
+					
+					
+						
+						
+						
+						
+					if(b2.getBlogID().equals(b.getBlogID().toString()))
 							{
 								System.out.println("666666666");
 								JSONArray jarr1 = new JSONArray();
 								JSONParser jpar= new JSONParser();
 								
-								try
+								if(b2.getLikeList()!=null)
 								{
-									jarr1=(JSONArray)jpar.parse(b2.getLikeList());
+									try
+									{
+										jarr1=(JSONArray)jpar.parse(b2.getLikeList());
+									}
+									catch(Exception e)
+									{
+										e.printStackTrace();
+									}
+								
+								
+									if(b2.getLikeList().contains(pu.getID().toString()))
+									{
+										
+										jobj.put("check1", "true");		
+										
+									}
+									else
+									{
+										jobj.put("check1", "true");		
+										
+									}
+								
+								
 								}
-								catch(Exception e)
+								else
 								{
-									e.printStackTrace();
+									jobj.put("check1", "false");		
+									
 								}
 									
 								jobj.put("Value", b2.getValue());
@@ -155,13 +209,17 @@ JavaMailSender mail;
 								jobj.put("likedlist",b2.getLikeList());		
 								jobj.put("Contentid",b2.getContentID());
 								//jobj.put("ownerid", pu.getUsername());
-								jarr.add(jobj);
 								
+								jarr.add(jobj);
 							}	
-						
+					
 				
 				}
+			
 		}
+		
+		
+		
 		else if (b.getBlogID().toString()==null&& list==null)
 			{
 			JSONObject jobj = new JSONObject();
@@ -169,10 +227,18 @@ JavaMailSender mail;
 				
 				jarr.add(jobj);
 			}
+	
+		
 		mav.addObject("mydata", jarr.toJSONString());
 		System.out.println("ARRAY"+jarr.toString());
-	
 		mav.addObject("blogcontent", new BlogContent());
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			
+		}
+		
 		return mav;
 	}
 	
