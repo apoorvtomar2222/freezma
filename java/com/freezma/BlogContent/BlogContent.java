@@ -14,10 +14,19 @@ public class BlogContent
 	{
 		
 	}
-	@Id @GeneratedValue(strategy=GenerationType.AUTO)
+	@Id @GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private long ContentID;
+	
 	private String BlogID;
 	private String TimeStamp;
+	@Lob
+	private String Value;
+	@Lob
+	private String LikeList;
+	
+	
+	
+
 	
 	public long getContentID() {
 		return ContentID;
@@ -25,8 +34,6 @@ public class BlogContent
 	public void setContentID(long contentID) {
 		ContentID = contentID;
 	}
-
-	
 	public String getBlogID() {
 		return BlogID;
 	}
@@ -51,10 +58,6 @@ public class BlogContent
 	public void setLikeList(String likeList) {
 		LikeList = likeList;
 	}
-	@Lob
-	private String Value;
-	@Lob
-	private String LikeList;
 	
 	
 	

@@ -16,7 +16,14 @@
 		{
 		
 			$scope.data=${data};	
-			
+			$scope.check =function()
+			{
+				if($scope.currentUser=$scope.mydata.Username)
+					{
+						check:true;
+						
+					}
+			}
 		})
 };	
 
@@ -42,7 +49,7 @@
 			</thead>
 			
 			<tbody>
-				<tr ng-repeat="x in data">
+				<tr ng-repeat="x in data" ng-if="check">
 					<td><img alt="No Image" ng-src="${pageContext.request.contextPath}/{{x.BlogImage}}" width="100px" height="100px"></td>
 					<td><a href="${pageContext.request.contextPath}/blogcontent/{{x.BlogID}}"/>{{x.Topicname}}</td>
 					<td>{{x.Description}}</td>

@@ -28,6 +28,7 @@ public class BlogContentDAOImpl implements BlogContentDAO
 		}
 		public void insert(BlogContent p) 
 		{
+			System.out.println(p.getBlogID());
 			sessionFactory.getCurrentSession().save(p);
 			
 		}
@@ -35,7 +36,7 @@ public class BlogContentDAOImpl implements BlogContentDAO
 		public void delete(int p) 
 		{
 			System.out.println("id to be deleted in dao impl  "+p);
-			sessionFactory.getCurrentSession().createQuery("delete from Blog as p where p.BlogID = :BlogID").setInteger("BlogID", p).executeUpdate();	
+			sessionFactory.getCurrentSession().createQuery("delete from BlogContent as p where p.ContentID = :ContentID").setInteger("ContentID", p).executeUpdate();	
 		}
 
 		public void update(BlogContent p) 
@@ -47,7 +48,7 @@ public class BlogContentDAOImpl implements BlogContentDAO
 		public BlogContent get(String p) 
 		{
 			
-			List l = this.getSessionFactory().getCurrentSession().createQuery("from BlogContent as p where p.BlogID = :BlogID").setString("BlogID", p).list();
+			List l = this.getSessionFactory().getCurrentSession().createQuery("from BlogContent as p where p.ContentID = :ContentID").setString("ContentID", p).list();
 			if (l.size()>0)
 			{
 				return (BlogContent)l.get(0);

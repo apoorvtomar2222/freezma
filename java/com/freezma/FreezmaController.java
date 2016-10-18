@@ -69,7 +69,13 @@ JavaMailSender mail;
 	{
 		return "index";
 	}
+	
+	
+	
 	////////////////////////////////////////////////////// For Adding content in blog
+	
+	
+	
 	
 	@RequestMapping(value="/blogcontent/{BlogID}")
 	public ModelAndView blogcontent(@PathVariable("BlogID") String id)
@@ -82,57 +88,85 @@ JavaMailSender mail;
 		{
 			user = authentication.getName();
 		}
-
-		/*<%
-if (request.isUserInRole("ADMIN"))
-{
-%>
-
-<%							
-}
-%>
-
-*/
-		Profile pu = as.get(user); 
+			
+		List<Profile> list1 = as.getAllUsers();
+		
 		Blog b = bs.get(id);
-		BlogContent bc= bcs.get(id);
-
+		for(Profile p:list1)
+		{
+		/*	System.out.println("p.getUsername()" + p.getUsername());
+			System.out.println("p.getUsername()" + p.getID());
+			System.out.println("p.getUsername()" + b.getOwnerID());
+		*/	if (String.valueOf(p.getID()).equals(b.getOwnerID()))
+			{
+				System.out.println("matched owner id");
+				mav.addObject("Username",p.getUsername());
+				break;
+			}
+			
+		}
+		//Profile pu = as.get(user);
+	
 		
 		List<BlogContent> list = bcs.getAllBlogs();
-		System.out.println("this is bc "+bc);
+		
 		System.out.println("this is list is "+list);
 		
 		mav.addObject("BlogId",b.getBlogID());
-		mav.addObject("Username",pu.getUsername());
 		mav.addObject("Topicname",b.getTopicname());
 		mav.addObject("Description",b.getDescription());
 		
 		JSONArray jarr = new JSONArray();
-		JSONObject jobj = new JSONObject();
+		
 
 		System.out.println(b.getBlogID());
 		//System.out.println(bc.getBlogID());
 		
 		
-		if(b.getBlogID().toString()!=null&& bc!=null)
+		if(b.getBlogID().toString()!=null&& list!=null)
 		{
 			System.out.println("33333");
 			for(BlogContent b2:list)
 				{
+				JSONObject jobj = new JSONObject();
 					System.out.println("555555555555");
-					System.out.println("b2.getBlogID is " +b2.getBlogID());
-						if( b2.getBlogID().equals(b.getBlogID().toString()) )
+					System.out.println("b2.getBlogID is " +b2.getBlogID()+"value"+b2.getValue());
+					System.out.println("b.getBlogID().toString() is " +b.getBlogID().toString());
+						if(b2.getBlogID().equals(b.getBlogID().toString()))
 							{
 								System.out.println("666666666");
+								JSONArray jarr1 = new JSONArray();
+								JSONParser jpar= new JSONParser();
+								
+								try
+								{
+									jarr1=(JSONArray)jpar.parse(b2.getLikeList());
+								}
+								catch(Exception e)
+								{
+									e.printStackTrace();
+								}
+									
 								jobj.put("Value", b2.getValue());
+								jobj.put("blogid", b2.getContentID());
+								jobj.put("Timestamp",b2.getTimeStamp());
+								 int length = jarr1.size();
+								jobj.put("length12",length);
+								jobj.put("likedlist",b2.getLikeList());		
+								jobj.put("Contentid",b2.getContentID());
+								//jobj.put("ownerid", pu.getUsername());
 								jarr.add(jobj);
 								
-							}
+							}	
+						
+				
 				}
 		}
-		else if(bc==null)
+		else if (b.getBlogID().toString()==null&& list==null)
 			{
+			JSONObject jobj = new JSONObject();
 				jobj.put("Value", "no post");
+				
 				jarr.add(jobj);
 			}
 		mav.addObject("mydata", jarr.toJSONString());
@@ -149,9 +183,7 @@ if (request.isUserInRole("ADMIN"))
 		System.out.println("this is the id "+ p.getBlogID());
 		
 		
-		BlogContent bc = bcs.get(p.getBlogID());
 		
-		System.out.println(bc);
 		
 		String user = "";
 		
@@ -170,30 +202,16 @@ if (request.isUserInRole("ADMIN"))
 			p.setBlogID(p.getBlogID());
 			p.setTimeStamp(df.format(dateobj));
 			p.setValue(p.getValue());
+			System.out.println(p.getBlogID());
+			System.out.println(p.getTimeStamp());
+			System.out.println(p.getValue());
 			
 			bcs.insert(p);
 		
-			return "redirect:http://localhost:9000/freezma/blog/{{x.BlogID}}";
+			return "redirect:http://localhost:9000/freezma/blog/";
 		}
 	
 
-	@RequestMapping(value = "/like", method = RequestMethod.POST)
-	public String like() 
-	{
-		
-				
-			return "redirect:blog";
-		}
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	
@@ -343,14 +361,24 @@ if (request.isUserInRole("ADMIN"))
 		{
 			user = auth.getName();
 		}
+		
 		Profile p =as.get(user);
 		List<Blog> list = bs.getAllBlogs();
 		
+		
+		
 		System.out.println(list);
 		System.out.println("id1"+p.getID());
-
+		
 		for(Blog b: list)
 		{
+			System.out.println("id"+b.getOwnerID());
+
+			/*if(b.getOwnerID().equals(p.getID().toString()))
+				
+			{
+			*/	
+			
 			JSONObject jobj = new JSONObject();	
 			jobj.put("BlogImage", b.getImage());
 			jobj.put("Topicname",b.getTopicname());
@@ -361,7 +389,9 @@ if (request.isUserInRole("ADMIN"))
 			
 			jarr.add(jobj);
 		
-		}
+			}
+			
+		
 		mav.addObject("data",jarr.toJSONString());
 		System.out.print(jarr);
 		
@@ -391,7 +421,7 @@ if (request.isUserInRole("ADMIN"))
 		mav.addObject("blog" , new Blog());
 		return mav;
 	}
-	
+	//Entering the blogs
 	@RequestMapping(value = "/insertblog", method = RequestMethod.POST)
 	public String insertproduct(@ModelAttribute("blog") Blog p) 
 	{
