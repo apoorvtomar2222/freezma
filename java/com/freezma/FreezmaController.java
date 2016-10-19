@@ -74,7 +74,57 @@ JavaMailSender mail;
 		return "index";
 	}
 	
+	//////////////////////////////////////
 	
+	
+	@RequestMapping(value="/forum")
+	public ModelAndView forum()
+	{
+		
+		ModelAndView mav = new ModelAndView("forum");
+		JSONArray jarr = new JSONArray();
+		String user="";
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth != null && !auth.getName().equals("anonymousUser")) 
+		{
+			user = auth.getName();
+		}
+		
+		Profile p =as.get(user);
+		List<Blog> list = bs.getAllBlogs();
+		
+		
+		
+		System.out.println(list);
+		System.out.println("id1"+p.getID());
+		
+		for(Blog b: list)
+		{
+			System.out.println("id"+b.getOwnerID());
+
+			/*if(b.getOwnerID().equals(p.getID().toString()))
+				
+			{
+			*/	
+			
+			JSONObject jobj = new JSONObject();	
+			jobj.put("BlogImage", b.getImage());
+			jobj.put("Topicname",b.getTopicname());
+			jobj.put("Description",b.getDescription());
+			jobj.put("Dateandtime",b.getTimestamp());
+			jobj.put("OwnerID",b.getOwnerID());
+			jobj.put("BlogID",b.getBlogID());
+			
+			jarr.add(jobj);
+		
+			}
+			
+		
+		mav.addObject("data",jarr.toJSONString());
+		System.out.print(jarr);
+		
+		return mav;
+	}
 	
 	////////////////////////////////////////////////////// For Adding content in blog
 	

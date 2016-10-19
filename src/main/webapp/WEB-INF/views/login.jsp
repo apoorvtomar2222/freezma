@@ -20,13 +20,10 @@
 
 <body>
 	<c:import url="head.jsp" />
-	<br>
-	<br>
-	<br>
-	<br>
-	<br>
-
-
+	
+	<br><br><br>
+	<br><br><br>
+	
 	<div align="center">
 
 		<form action="login" method="post">

@@ -20,6 +20,7 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -73,8 +74,6 @@ public class RESTFreezmaController {
 
 		JSONObject json = new JSONObject();
 
-		System.out.println(user);
-
 		if (user != null) {
 			Profile p = ps.get(user);
 
@@ -118,16 +117,15 @@ public class RESTFreezmaController {
 			System.out.println(auth.getName());
 			user = auth.getName();
 		}
-
-		System.out.println(user);
-
-		if (user != null) {
+		if (user != null) 
+		{
 			Profile p = ps.get(user);
 
 			p.setUsername(jobjin.get("ProfileName").toString());
 			p.setGender(jobjin.get("ProfileGender").toString());
 			p.setPhone(jobjin.get("ProfilePhone").toString());
 			p.setAddress(jobjin.get("ProfileAddress").toString());
+			p.setEmail(jobjin.get("ProfileEmail").toString());
 			p.setCPassword(p.getPassword());
 
 			ps.update(p);
@@ -1132,6 +1130,60 @@ public ResponseEntity<String> AcceptRequest(HttpServletRequest req, HttpServletR
 	
 
 	@CrossOrigin
+    @RequestMapping(value = "/submitBlog/", method = RequestMethod.POST)
+    public ResponseEntity<String> submitBlog(@ModelAttribute BlogContent p,HttpServletRequest request, HttpServletResponse response, @RequestBody String data12, UriComponentsBuilder ucBuilder) 
+	{
+		System.out.println(data12);
+		
+		JSONParser jpar = new JSONParser();
+        
+        JSONObject jobj = new JSONObject();
+        
+        
+        try
+        {
+        	jobj = (JSONObject)jpar.parse(data12);
+        }
+		catch(Exception e)
+        {
+			System.out.println("ERROR READING ADDRESSES");
+        }
+        String user = "";
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    	if (auth != null && !auth.getName().equals("anonymousUser"))
+	    	{    
+	    		user = auth.getName();
+	    	}
+	    	
+	    	DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+			Date dateobj = new Date();
+		
+		Profile pu = ps.get(user);
+/*		if(user!=null)
+		{
+
+			p.setContentID(ContentID);
+			p.setCommentValue(CommentContent);
+			p.setTimeStamp(df.format(dateobj));
+			p.setOwnerID(pu.getID().toString());
+			bcms.insert(p);
+		}
+*/		JSONObject res = new JSONObject();
+		
+		
+	    	res.put("CommentUserName",user);
+	    	res.put("status", "updated");
+	    	res.put("Contentid", p.getContentID());
+	    	System.out.println(res.toJSONString());
+
+	    	return new ResponseEntity<String>(res.toJSONString(), HttpStatus.CREATED);
+    }
+
+	
+	
+	
+	@CrossOrigin
 	@RequestMapping(value = "/fetchcomment/", method = RequestMethod.POST)
 	public ResponseEntity<String> fetchcomment(HttpServletRequest request, HttpServletResponse response,UriComponentsBuilder ucBuilder) {
 
@@ -1169,6 +1221,24 @@ public ResponseEntity<String> AcceptRequest(HttpServletRequest req, HttpServletR
 		System.out.println("this is fetch comment "+jarr);
 		return new ResponseEntity<String>(jarr.toString(), HttpStatus.CREATED);
 	}
+	
+	
+
+	@CrossOrigin
+	@RequestMapping(value = "/fetchAllblog/", method = RequestMethod.POST)
+	public ResponseEntity<String> fetchAllBlog(HttpServletRequest request, HttpServletResponse response,UriComponentsBuilder ucBuilder)
+	{
+		
+		
+		
+		
+		
+	
+		JSONObject jobj = new JSONObject();
+		return new ResponseEntity<String>(jobj.toString(), HttpStatus.CREATED);
+		
+}	
+		
 }
 	
 	

@@ -336,9 +336,7 @@ myapp.controller("abc",['$scope','UserService',function($scope,$UserService)
 				<div  class="col-sm-10" style=" font-size:30px; font-family:Tahoma; border-radius: 10px; border-style:groove;  background-color: lightblue;">{{y.CommentValue}}</div>
 				</<span  class="pull-right glyphicon glyphicon-time">{{y.CommentTimeStamp}}</span>
 				<div class="col-sm-2" style="font-size:15px; text-transform: capitalize;">{{y.OwnerName}}</div>
-				
 				<br><br>
-				
 		</div>	
 </div>
 </div> 
