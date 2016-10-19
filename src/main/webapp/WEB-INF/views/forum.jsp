@@ -28,7 +28,8 @@
 };	
 
 </script>
-<body ng-app="myApp" ng-controller="abc">
+
+ <body ng-app="myApp" ng-controller="abc">
 <c:import url="head.jsp"></c:import>
 
 <br><br><br><br><br><br><br><br>
