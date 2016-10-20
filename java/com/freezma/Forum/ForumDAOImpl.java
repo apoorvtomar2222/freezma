@@ -3,6 +3,7 @@ package com.freezma.Forum;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -12,6 +13,7 @@ import com.freezma.Blog.Blog;
 @EnableTransactionManagement
 public class ForumDAOImpl implements ForumDAO
 {
+	@Autowired
 	public SessionFactory sessionFactory;
 	
 	public SessionFactory getSessionFactory() {
@@ -39,7 +41,7 @@ public class ForumDAOImpl implements ForumDAO
 
 	public Forum get(String p) 
 	{
-		List l = this.getSessionFactory().getCurrentSession().createQuery("from Blog as p where p.ForumID = :ForumID").setString("ForumID", p).list();
+		List l = this.getSessionFactory().getCurrentSession().createQuery("from Forum as p where p.ForumID = :ForumID").setString("ForumID", p).list();
 		if (l.size()>0)
 		{
 			return (Forum)l.get(0);
@@ -53,6 +55,9 @@ public class ForumDAOImpl implements ForumDAO
 
 	public List<Forum> getAllForums() 
 	{
+		System.out.println( "Session Factory:" + sessionFactory);
+		System.out.println(sessionFactory.getCurrentSession());
+		
 		List<Forum> list = (List<Forum>)sessionFactory.getCurrentSession().createQuery("from Forum").list();
 		return list;
 		

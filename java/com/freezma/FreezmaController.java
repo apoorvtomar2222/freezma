@@ -352,9 +352,116 @@ public class FreezmaController {
 		bs.delete(prodid);
 
 		return "redirect:http://localhost:9000/freezma/blog";
+	}
+
+	
+	
+	
+	
+	
+	
+	@RequestMapping(value = "/updateforum/{ForumID}")
+	public ModelAndView updateForum(@PathVariable("ForumID") String prodid) {
+		ModelAndView mav = new ModelAndView("updateforum");
+		System.out.println(prodid);
+		try{
+		Forum b = fs.get(prodid.toString());
+		System.out.println(b.getTopicname());
+		mav.addObject("Forum", b);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		return mav;
 
 	}
 
+	@RequestMapping(value = "/updateforum", method = RequestMethod.POST)
+	public String updateforum(@ModelAttribute("forum") Forum p) {
+		System.out.println("this is the id " + p.getForumID());
+		/*
+		 * Blog b = bs.get(p.toString());
+		 * 
+		 * System.out.println(b.getBlogID());
+		 */
+
+		String user = "";
+
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth != null && !auth.getName().equals("anonymousUser")) {
+			user = auth.getName();
+		}
+		Profile p1 = as.get(user);
+
+		try {
+
+			String path = context.getRealPath("/");
+
+			System.out.println(path);
+
+			File directory = null;
+
+			// System.out.println(ps.getProductWithMaxId());
+
+			if (p.getProductFile().getContentType().contains("image"))
+
+			{
+				directory = new File(path + "\\resources\\images");
+
+				System.out.println(directory);
+				byte[] bytes = null;
+				File file = null;
+				bytes = p.getProductFile().getBytes();
+
+				if (!directory.exists())
+					directory.mkdirs();
+
+				file = new File(directory.getAbsolutePath() + System.getProperty("file.separator") + "image_"
+						+ p.getForumID() + ".jpg");
+
+				System.out.println(file.getAbsolutePath());
+
+				BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(file));
+				stream.write(bytes);
+				stream.close();
+
+			}
+
+			p.setImage("resources/images/image_" + p.getForumID() + ".jpg");
+			// p.setID(p1.getID());
+			p.setOwnerID(p1.getID().toString());
+
+			// p.setProductFile(p.getProductFile());
+			// b.setOwnerID(p1.getID().toString());
+			// p.setTimestamp(b.getTimestamp().toString());
+			
+			fs.update(p);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return "redirect:forum";
+	}
+
+	/////////////////////////// DElete blog
+	@RequestMapping(value = "/delete/{ForumID}")
+	public String deleteforum(@PathVariable("ForumID") int prodid) {
+
+		System.out.println(prodid);
+
+		fs.delete(prodid);
+
+		return "redirect:http://localhost:9000/freezma/forum";
+	}
+
+	
+	
+	
+	
+	
+	
 	@RequestMapping(value = "/forum")
 	public ModelAndView forum() 
 	{
@@ -370,29 +477,39 @@ public class FreezmaController {
 
 		Profile p = as.get(user);
 
-		List<Forum> list = fs.getAllForums();
-
-		System.out.println(list);
-		System.out.println("id1" + p.getID());
-
-		for (Forum b : list) 
+		try
 		{
-			System.out.println("id" + b.getOwnerID());
-			JSONObject jobj = new JSONObject();
-			jobj.put("ForumImage", b.getImage());
-			jobj.put("Topicname", b.getTopicname());
-			jobj.put("Description", b.getDescription());
-			jobj.put("Dateandtime", b.getTimestamp());
-			jobj.put("OwnerID", b.getOwnerID());
-			jobj.put("BlogID", b.getForumID());
+			List<Forum> list = fs.getAllForums();
 
-			jarr.add(jobj);
-
+			System.out.println("hi" + list);
+			
+			if(user!=null)
+			{
+			for (Forum b : list) 
+			{
+				System.out.println("id" + b.getOwnerID());
+				JSONObject jobj = new JSONObject();
+				jobj.put("ForumImage", b.getImage());
+				jobj.put("Topicname", b.getTopicname());
+				jobj.put("Description", b.getDescription());
+				jobj.put("Dateandtime", b.getTimestamp());
+				jobj.put("OwnerID", b.getOwnerID());
+				jobj.put("ForumID", b.getForumID());
+				jarr.add(jobj);
+			
+			}}
 		}
+		catch( Exception e )
+		{
+			e.printStackTrace();
+		}
+	
+
+	
 		mav.addObject("data", jarr.toJSONString());
 		System.out.print(jarr);
 		return mav;
-	}
+}
 
 	@RequestMapping(value = "/blog")
 	public ModelAndView blog() {
@@ -692,4 +809,109 @@ public class FreezmaController {
 
 		return "index";
 	}
+	
+	
+	
+	
+	@RequestMapping(value = "/addforum/")
+	public ModelAndView addforum() {
+
+		ModelAndView mav = new ModelAndView("addforum");
+
+		mav.addObject("forum", new Forum());
+		return mav;
+	}
+
+	// Entering the blogs
+	@RequestMapping(value = "/insertforum", method = RequestMethod.POST)
+	public String insertForum(@ModelAttribute("forum") Forum p) {
+		String user = "";
+
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth != null && !auth.getName().equals("anonymousUser")) {
+			user = auth.getName();
+		}
+		Profile p1 = as.get(user);
+
+		DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+		Date dateobj = new Date();
+		System.out.println(df.format(dateobj));
+		p.setOwnerID(p1.getID().toString());
+		p.setTimestamp(df.format(dateobj));
+		fs.insert(p);
+
+		/*
+		 * JSONObject jobj= new JSONObject(); JSONParser jpar= new JSONParser();
+		 * try { jobj = (JSONObject) jpar.parse(p.toString()); } catch(Exception
+		 * e) { e.printStackTrace(); }
+		 * 
+		 * String id = jobj.get("Topicname").toString(); System.out.println(id);
+		 * 
+		 */
+
+		try {
+
+			Forum i1 = fs.getBlogWithMaxId();
+
+			/*System.out.println(i1.getBlogID().toString());*/
+
+			String path = context.getRealPath("/");
+
+			System.out.println(path);
+
+			File directory = null;
+
+			// System.out.println(ps.getProductWithMaxId());
+
+			if (p.getProductFile().getContentType().contains("image"))
+
+			{
+				directory = new File(path + "\\resources\\images");
+
+				System.out.println(directory);
+				byte[] bytes = null;
+				File file = null;
+				bytes = p.getProductFile().getBytes();
+
+				if (!directory.exists())
+					directory.mkdirs();
+
+				file = new File(directory.getAbsolutePath() + System.getProperty("file.separator") + "image_"
+						+ i1.getForumID() + ".jpg");
+
+				System.out.println(file.getAbsolutePath());
+
+				BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(file));
+				stream.write(bytes);
+				stream.close();
+
+			}
+
+			i1.setImage("resources/images/image_" + i1.getForumID() + ".jpg");
+
+			fs.update(i1);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return "redirect:forum";
+	}
+	
+	@RequestMapping(value = "/forumcontent/{ForumID}")
+	public ModelAndView forumcontent(@PathVariable("ForumID") String id) {
+		System.out.println("this is id " + id);
+
+		ModelAndView mav = new ModelAndView("forumcontent");
+		String user = "";
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication != null && !authentication.equals("annonymousUser")) 
+		{
+			user = authentication.getName();
+		}
+			Forum b = fs.get(id);
+			mav.addObject("Forum id", b.getForumID());
+			
+		return mav;
+	}
+	
 }

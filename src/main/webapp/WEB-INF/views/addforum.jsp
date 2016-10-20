@@ -7,7 +7,7 @@
 <c:import url="head-meta.jsp"></c:import>
 
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>ADD BLOGS</title>
+<title>ADD FORUM</title>
 </head>
 <body>
 <c:import url="head.jsp" />
@@ -23,9 +23,9 @@
 <div class="container">
 
 				
-	<form:form action="${pageContext.request.contextPath}/insertblog" method="post" modelAttribute="blog" enctype="multipart/form-data">
+	<form:form action="${pageContext.request.contextPath}/insertforum" method="post" modelAttribute="forum" enctype="multipart/form-data">
 		
-			<form:input type="hidden" path="blogID" />
+			<form:input type="hidden" path="forumID" />
 			
 			<table>
 				<tr>

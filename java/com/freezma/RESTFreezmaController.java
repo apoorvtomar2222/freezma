@@ -12,6 +12,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.http.protocol.HTTP;
 import org.codehaus.jackson.JsonParser;
 import org.hibernate.validator.constraints.Length;
 import org.json.simple.JSONArray;
@@ -20,6 +21,7 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Jsr250MethodSecurityMetadataSource;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -37,6 +39,8 @@ import com.freezma.BlogComment.BlogComment;
 import com.freezma.BlogComment.BlogCommentService;
 import com.freezma.BlogContent.BlogContent;
 import com.freezma.BlogContent.BlogContentService;
+import com.freezma.Forum.Forum;
+import com.freezma.Forum.ForumService;
 import com.freezma.ProfileModel.Profile;
 import com.freezma.ProfileModel.ProfileService;
 
@@ -46,6 +50,8 @@ import javassist.compiler.ast.Variable;
 @RestController
 public class RESTFreezmaController {
 
+	@Autowired
+	ForumService fs;
 	@Autowired
 	ProfileService ps;
 
@@ -57,6 +63,35 @@ public class RESTFreezmaController {
 	
 	@Autowired
 	BlogCommentService bcms;
+	
+	@CrossOrigin
+	@RequestMapping(value="/getforumdetail", method=RequestMethod.POST)
+	public ResponseEntity<String> getforumdetails(@ModelAttribute Forum p , HttpServletRequest req , HttpServletResponse rep , UriComponentsBuilder ucBuilder)
+	{
+		
+		JSONObject jobj = new JSONObject();
+		String user = "";
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if(authentication!=null && !authentication.getName().equals("annonymusUser"))
+		{
+			System.out.println(user);
+			user= authentication.getName();
+		}
+		Profile p = ps.get(user);
+		if(user!=null)
+			
+		{
+			jobj.put("ForumWriter", p.getOwnerID());
+			jobj.put("Topic Name", p.getTopicname());
+			jobj.put("Topic Name", p.getDescription());
+			
+		}
+		
+		System.out.println(jobj);
+		
+	return new ResponseEntity<String>(jobj.toJSONString(),HttpStatus.CREATED);
+	}
+	
 	
 	
 	@CrossOrigin
@@ -1223,22 +1258,64 @@ public ResponseEntity<String> AcceptRequest(HttpServletRequest req, HttpServletR
 	}
 	
 	
-
+/*
 	@CrossOrigin
-	@RequestMapping(value = "/fetchAllblog/", method = RequestMethod.POST)
-	public ResponseEntity<String> fetchAllBlog(HttpServletRequest request, HttpServletResponse response,UriComponentsBuilder ucBuilder)
+	@RequestMapping(value = "/addForum/", method = RequestMethod.POST)
+	public ResponseEntity<String> addForum(@ModelAttribute Forum f ,HttpServletRequest request, HttpServletResponse response,@RequestBody String data,UriComponentsBuilder ucBuilder)
 	{
+		System.out.println("data in addForum "+ data);
 		
-		
-		
-		
-		
-	
+		JSONParser jpar = new JSONParser();
 		JSONObject jobj = new JSONObject();
-		return new ResponseEntity<String>(jobj.toString(), HttpStatus.CREATED);
+
+		try
+		{
+			jobj = (JSONObject)jpar.parse(data);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	
+		DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+		Date dateobj = new Date();
+		
+		String user="";
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth != null && !auth.getName().equals("anonymousUser")) 
+		{
+			user = auth.getName();
+		}
+		Profile pu = ps.get(user);
+		
+		   
+		String topicname = jobj.get("Topicname").toString();
+		String topicdescription = jobj.get("Description").toString();
+		
+		System.out.println("data in topicname "+ topicname);
+		System.out.println("data in topicdescription "+ topicdescription);
+		if(user!=null)
+		{
+			f.setStatus("Pending");
+			f.setDescription(topicdescription);
+			f.setTopicname(topicname);
+			f.setTimestamp(df.format(dateobj));
+			
+			fs.insert(f);
+		}
+	JSONObject jobj1 = new JSONObject();
+	jobj1.put("status", "updated");
+		
+		
+		
+		return new ResponseEntity<String>(jobj1.toString(), HttpStatus.CREATED);
 		
 }	
-		
+	
+	
+	
+	
+*/		
 }
 	
 	
