@@ -12,6 +12,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.math.Fraction;
 import org.apache.http.protocol.HTTP;
 import org.codehaus.jackson.JsonParser;
 import org.hibernate.validator.constraints.Length;
@@ -27,6 +28,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -65,26 +67,42 @@ public class RESTFreezmaController {
 	BlogCommentService bcms;
 	
 	@CrossOrigin
-	@RequestMapping(value="/getforumdetail", method=RequestMethod.POST)
-	public ResponseEntity<String> getforumdetails(@ModelAttribute Forum p , HttpServletRequest req , HttpServletResponse rep , UriComponentsBuilder ucBuilder)
+	@RequestMapping(value="/getforumDetail/{x.ForumID}", method=RequestMethod.POST)
+	public ResponseEntity<String> getforumdetails(@PathVariable("ForumID") String id, HttpServletRequest req , HttpServletResponse rep , UriComponentsBuilder ucBuilder)
 	{
-		
+		System.out.println(id);
 		JSONObject jobj = new JSONObject();
+		
 		String user = "";
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
 		if(authentication!=null && !authentication.getName().equals("annonymusUser"))
 		{
-			System.out.println(user);
 			user= authentication.getName();
 		}
-		Profile p = ps.get(user);
+		System.out.println(user);
+
+		Profile pu = ps.get(user);
+	
+		List<Forum> list = fs.getAllForums();
+		
 		if(user!=null)
-			
 		{
-			jobj.put("ForumWriter", p.getOwnerID());
-			jobj.put("Topic Name", p.getTopicname());
-			jobj.put("Topic Name", p.getDescription());
+		for(Forum f:list)
+		{
+			System.out.println("f.getowner id   "+ f.getOwnerID());
 			
+			System.out.println("user id"+ pu.getID().toString());
+			if(f.getOwnerID().equals(pu.getID().toString()))
+			{
+				
+				jobj.put("ForumWriter", pu.getUsername());
+				jobj.put("TopicName", f.getTopicname());
+				jobj.put("TopicDescription", f.getDescription());
+				
+			}
+			
+		}
 		}
 		
 		System.out.println(jobj);
@@ -840,7 +858,7 @@ public ResponseEntity<String> AcceptRequest(HttpServletRequest req, HttpServletR
 			json.put("status", "Deleted");
 			json.put("ProfileAssociation","notfriend");
 			json.put("ProfileID", P2.getID());
-
+				
 		}
 
 		return new ResponseEntity<String>(json.toString(), HttpStatus.CREATED);
@@ -1316,7 +1334,144 @@ public ResponseEntity<String> AcceptRequest(HttpServletRequest req, HttpServletR
 	
 	
 */		
-}
+
+////////////////////////////////////////////For friend List
+
+/*
+@CrossOrigin
+@RequestMapping(value = "/fetchAllfriends/", method = RequestMethod.POST)
+public ResponseEntity<String> fetchAllfriends(HttpServletRequest request, HttpServletResponse response, UriComponentsBuilder ucBuilder) {
+	JSONArray jarr = new JSONArray();
 	
+	String user = null;
+
+	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	if (auth != null && !auth.getName().equals("anonymousUser")) 
+	{
+		// System.out.println(auth.getName());
+		user = auth.getName();
+	}
+
+	Profile P1 = ps.get(user);
+	List<Profile> list = ps.getAllUsers();
+		for (Profile p : list) 
+		{
+		
+	if (user!=null) 
+			{
+				JSONObject jobj = new JSONObject();
+				jobj.put("ProfileImage", P1.getImage());
+				
+				jarr.add(jobj);
+			}
+	System.out.println("this is the friend rest controller araay   "+jarr);
+	
+		
+return new ResponseEntity<String>(jarr.toString(), HttpStatus.CREATED);
+
+	
+}*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@CrossOrigin
+@RequestMapping(value = "/GetAllFriends/", method = RequestMethod.POST)
+public ResponseEntity<String> GetAllFriends(HttpServletResponse response,@RequestBody String data, UriComponentsBuilder ucBuilder) {
+    
+	System.out.println("getAllFriends data "+ data);
+		
+	JSONArray jarr = new JSONArray();
+	JSONParser jpar = new JSONParser();	
+	JSONObject jobj = new JSONObject();
+	try
+	{
+		jobj =(JSONObject)jpar.parse(data);
+	}
+	catch(Exception e)
+	{
+		e.printStackTrace();
+	}
+	
+	String user = jobj.get("currentUser").toString();
+	
+	Profile  p1 = ps.get(user);
+	
+	if( p1 != null && p1.getFriendList() != null )
+	{
+		String friends[] = p1.getFriendList().split(",");
+		List<Profile> list = ps.getAllUsers();
+		for( String friend: friends )
+		{
+			for(Profile b:list)
+			{
+		/*	if(friend!=null && b!=null)
+			{
+			
+					
+			
+		*/		System.out.println("friend"+friend.toString());
+				System.out.println("id" + b.getID() );
+		   if(friend.toString().contains(b.getID().toString()))
+				{
+					System.out.println(friend);
+					
+					JSONObject jobj1 = new JSONObject();
+					
+					jobj1.put("Name", b.getUsername());
+					jobj1.put("Image", b.getImage().replaceAll("\\\\", ""));
+					
+					jarr.add(jobj1);
+					
+				}
+		   else{
+			   System.out.println("sorry no match");
+			   
+		   }
+				
+				
+		/*	}
+		*/	}
+			
+			
+			/*Profile pe = ps.get(friend);
+			
+			if( pe != null )
+			{
+				JSONObject jobj1 = new JSONObject();
+				
+				jobj.put("Name", pe.getUsername());
+				jobj.put("Image", pe.getImage().replaceAll("\\\\", ""));
+				
+				jarr.add(jobj);
+			}*/
+			
+			
+			
+		}
+		
+	}
+	
+	JSONObject json = new JSONObject();
+	
+	json.put("AllMyFriends", jarr);
+    System.out.println(json.toString());
+	
+    return new ResponseEntity<String>(json.toString(), HttpStatus.CREATED);
+}
+
+
+}	
 	
 

@@ -71,9 +71,18 @@ public class FreezmaController {
 
 	@Autowired
 	JavaMailSender mail;
+	
+	@RequestMapping(value = "/")
+	public String home() {
+		urs.generateUserRoles();
+		return "index";
+	}
+
 
 	@RequestMapping(value = "/index")
 	public String indx() {
+		
+		
 		return "index";
 	}
 
@@ -354,6 +363,8 @@ public class FreezmaController {
 		return "redirect:http://localhost:9000/freezma/blog";
 	}
 
+	
+	
 	
 	
 	
@@ -664,6 +675,26 @@ public class FreezmaController {
 			username = auth.getName();
 
 		}
+		List<Profile> list = as.getAllUsers();
+/*		Profile P1 = as.get(username);
+		JSONArray jarr = new JSONArray();
+		
+			for (Profile p : list) 
+			{
+			
+		if (username!=null) 
+				{
+					JSONObject jobj = new JSONObject();
+					jobj.put("ProfileName", P1.getUsername());
+					jobj.put("ProfileImage", P1.getImage());
+				
+					jarr.add(jobj);
+				}
+		System.out.println("Freezma controller profile "+jarr);*/
+
+		
+		
+
 		ModelAndView mav = new ModelAndView("profile");
 
 		/*
@@ -679,8 +710,9 @@ public class FreezmaController {
 		 * JSONArray jarr = new JSONArray();
 		 */
 		JSONObject jobj = new JSONObject();
-		List<Profile> list = as.getAllUsers();
-
+		
+		
+		
 		for (Profile p : list) {
 
 			if (p.getUsername().equals(username)) {
@@ -700,11 +732,6 @@ public class FreezmaController {
 
 	}
 
-	@RequestMapping(value = "/")
-	public String home() {
-		urs.generateUserRoles();
-		return "index";
-	}
 
 	/* ADD NEW USER */
 
@@ -902,16 +929,48 @@ public class FreezmaController {
 		System.out.println("this is id " + id);
 
 		ModelAndView mav = new ModelAndView("forumcontent");
+		
 		String user = "";
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication != null && !authentication.equals("annonymousUser")) 
 		{
 			user = authentication.getName();
 		}
-			Forum b = fs.get(id);
-			mav.addObject("Forum id", b.getForumID());
+		
+		Profile pu = as.get(user);
+		System.out.println(pu.getUsername());
+		Forum b = fs.get(id);
 			
+		
+		System.out.println(b.getOwnerID());
+		System.out.println(pu.getID());
+	
+		if(b!=null)
+		{
+		if(b.getOwnerID().equals(String.valueOf(pu.getID())))
+		{
+			System.out.println(pu.getUsername());
+			mav.addObject("ForumWriter", pu.getUsername());
+			mav.addObject("ForumTopicname", b.getTopicname());
+			
+			mav.addObject("ForumTopicdescription", b.getDescription());
+			System.out.println(b.getForumID());
+			System.out.println(b.getTopicname());
+			System.out.println(b.getDescription());
+		}
+		
+		}
+		
 		return mav;
 	}
 	
+	/*
+	
+	@RequestMapping(value = "/forumcontent")
+	public String arg()
+	{
+		
+		return "forumcontent";
+	}
+*/
 }

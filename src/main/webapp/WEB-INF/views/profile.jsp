@@ -41,9 +41,12 @@
   
   
   </style>
+  
+  
+  
 <script>
-	var myApp = angular.module('myApp', []);
-	
+	var myApp = angular.module("myApp", ["myApp1"]);
+
 	myApp.service('fileUpload', ['$http', function ($http) 
 	      {
 	    		this.uploadFileToUrl = function(file ,paramuser, uploadUrl)
@@ -157,7 +160,7 @@
 };}]);
 	
 	
-	myApp.controller("abc",['$scope', 'UserService', 'fileUpload' ,function($scope , $UserService,$fileUpload ) {
+	myApp.controller('abc',['$scope', 'UserService', 'fileUpload' ,function($scope , $UserService,$fileUpload ) {
 		$scope.data = ${data};
 		/* $scope.mydata = ${mydata};
 		 */$scope.myerror = "";
@@ -469,7 +472,6 @@
 
 <div class="container-fluid bg-1 text-center">
 <br><br><br>
-
 
 
 <div>

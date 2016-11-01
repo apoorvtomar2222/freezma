@@ -15,7 +15,7 @@
 <c:import url="head-meta.jsp"></c:import>
 </head>
 <script type="text/javascript">
-	var myApp = angular.module('myApp', []);
+	var myApp = angular.module('myApp', ["myApp1"]);
 	
 	myApp.factory('UserService', ['$http', '$q', function($http, $q){
 		
@@ -298,7 +298,9 @@ $scope.Delete = function(ProfileID, ProfileName )
       				{
       					$scope.update=response.status;
       					console.log( response.status );
- 						if( response.status == "Deleted" )
+      					console.log( response);
+ 					
+      					if( response.status == "Deleted" )
       					{
  							for( i = 0 ; i < $scope.data.length ; i++ )
      						{
@@ -317,7 +319,7 @@ $scope.Delete = function(ProfileID, ProfileName )
 		         				
      		
  							$scope.deleterequest = response.status;
-      						console.log( response.status );
+      				
       						
       					}
  						$scope.toggle = false;
@@ -337,8 +339,10 @@ $scope.IgnoreFriend = function(ProfileID, ProfileName )
 	$UserService.IgnoreFriend(JSON.stringify($scope.cfrequest))
 			.then(
       			function(response)
-      				{
-      					console.log( response.status );
+      				{	
+
+  						
+						console.log( response.status );
  						if( response.status == "Deleted" )
       					{
  							for( i = 0 ; i < $scope.data.length ; i++ )
@@ -400,8 +404,7 @@ $scope.IgnoreFriend = function(ProfileID, ProfileName )
     			</td>
     			
     					 	<td>
-				<label class="alert alert-success" ng-show=""data.ProfileAssociation=='Sent'&& update == 'Updated'">Updated</label>
-				<label class="alert alert-success" ng-show="update =='Deleted'">Request Cancelled</label>
+				<label class="alert alert-success" ng-show="data.ProfileAssociation=='Sent'&& update == 'Updated'">Sent</label>
 				
 			</td>	      
 	
