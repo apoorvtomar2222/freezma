@@ -1,16 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
+
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/references/js/stomp.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/references/js/sockjs-0.3.4.min.js"></script>
 
 <link rel="shortcut icon" href="flavicon.ico">
 <meta name=viewport content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
    <title>my home page</title>
 	<c:import url="head-meta.jsp"></c:import>
-</head>
 <script>
 	var myApp1 = angular.module("myApp1", []);
 	
@@ -89,7 +91,34 @@
 	             	                	console.error('Error while getting Friends.');
 	             	                } 
 	             	    	);
+ 
+ 
+ 				var ws;
+ 				var stompClient;
+ 
+	             ws = new SockJS("/freezma/chat");
+	             
+	             stompClient = Stomp.over(ws);
+	             
+	             stompClient.connect({},function(frame)
+	           		{
+	            	 stompClient.subscribe("/topic/chat",function(message)
+	           			{
+	           		 		console.log("Received " + message);
+	           			});
+	           		},
 	             			
+	           		function(error)
+	           		{
+	             		console.log("Stomp protocol error   " + error);
+	             			
+	           		}); 
+	            
+	             window.setTimeout( function(){
+	            	 stompClient.send('/app/chat',{}, "ABCD" );
+	             } , 1000 );
+	             
+	             
 	             			}]);
 	             		
 	//angular.bootstrap( document.getElementById('chat') , ['myApp1'] );
@@ -181,4 +210,3 @@
 
 
 </div>
-</html>
