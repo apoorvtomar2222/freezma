@@ -397,15 +397,14 @@ $scope.IgnoreFriend = function(ProfileID, ProfileName )
     			<span ng-if="!password" >FRIends</span>
 			 	<span  ng-if="password" >let it be</span>
 			 	</button>
-    			
+    	
     			<button ng-show="data.ProfileAssociation=='Friend'|| " ng-if="password" class="btn btn-danger">
     			<span  ng-click="RemoveFriend(data.ProfileID ,data.ProfileName)">Remove friend</span>
 			 	</button>
     			</td>
     			
-    					 	<td>
+    	 	<td>
 				<label class="alert alert-success" ng-show="data.ProfileAssociation=='Sent'&& update == 'Updated'">Sent</label>
-				
 			</td>	      
 	
 	

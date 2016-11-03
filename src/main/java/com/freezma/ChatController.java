@@ -23,7 +23,9 @@ public class ChatController {
 	@MessageMapping("/chat")
 	public String processQuestion( String data )
 	{
-		System.out.println(data);
+		System.out.println("hi  "+data);
+		
+		
 	
 	/*	JSONParser json = new JSONParser();
 		
